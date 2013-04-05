@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<configdata>
+	<roles>
+		<fred>red</fred>
+		<ted>red</ted>
+		<ed>red</ed>
+		<brady>green</brady>
+		<shannon>green</shannon>
+		<fiona>green</fiona>
+		<phyllis>purple</phyllis>
+		<michael>purple</michael>
+		<dwayne>purple</dwayne>
+		<green>green</green>
+		<red>red</red>
+		<purple>purple</purple>
+		<admin>admin</admin>
+		<guest>guest</guest>
+	</roles>
+</configdata>

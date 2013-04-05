@@ -1,0 +1,17 @@
+<?php 
+echo "<h1>" . $this->title . "</h1>\n";
+foreach($this->fileSet as $color => $list) {
+	echo "<p>\n"; 
+	echo "<h3 style='background-color:" . $color . ";color:white;'>File Set</h3>\n";
+	echo "<ul>\n";
+	foreach($list as $file) {
+		if ($file == 'index.html') {
+			echo "<li><a href='/file/access/color/" . $color . "'>" . $file . "</a></li>\n";
+		} else {
+			echo "<li>" . $file . "</li>\n";
+		} 
+	}
+	echo "</ul>\n";
+	echo "<p>\n"; 
+}
+?>

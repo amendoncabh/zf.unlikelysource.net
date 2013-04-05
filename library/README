@@ -1,0 +1,5 @@
+This is where you can establish a Zend Framework 1 library.
+You have three choices:
+1. Download ZF1 and copy the Zend folder (under library) here
+2. Create a symbolic link to an already existing copy of ZF1
+3. Just make sure that you have ZF1 somewhere in your PHP include_path

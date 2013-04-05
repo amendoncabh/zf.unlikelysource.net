@@ -1,0 +1,5 @@
+This is where you can establish the Dojo library.
+You have three choices:
+1. Download a complete version of ZF1 and copy the dojo folder (under externals) here
+2. Create a symbolic link to an already existing copy of dojo
+3. Modify the layout.phtml to *not* set a local version of dojo, which causes ZF to query google apis for a copy of dojo

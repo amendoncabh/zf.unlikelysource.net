@@ -1,0 +1,85 @@
+@CHARSET "UTF-8";
+body,html {
+      margin: 0 5px;
+      font-family: Verdana,sans-serif;
+}
+h1 {
+     font-size: 1.4em;
+     color: gray;
+}
+h2 {
+	color: gray;
+}
+h4 {
+	background-color: gray; 
+	color: white;
+}
+a {
+    color: gray;
+	text-decoration: none;
+}
+a:hover {
+	color: gray;
+	font-weight: bold;
+}
+/* Table */
+th {
+     text-align: left;
+}
+td, th {
+	font: 10pt Helvetica, sans;
+    padding-right: 5px;
+}
+p {
+	font: 10pt Helvetica, sans;
+	color: gray;
+}
+/* style form */
+form dt {
+     width: 100px;
+     display: block;
+     float: left;
+     clear: left;
+}
+form dd {
+     margin-left: 0;
+     float: left;
+}
+form #submitbutton {
+     margin-left: 100px;
+}
+
+.todo {
+	color: red;
+}
+.required {
+	color: gray;
+}
+label {
+	font: 10pt Helvetica, sans;
+}
+.gt {
+	color: white;
+	font-weight: bold;
+	background-color: green;
+}
+.rt {
+	color: white;
+	font-weight: bold;
+	background-color: red;
+}
+.pt {
+	color: white;
+	font-weight: bold;
+	background-color: purple;
+}
+.ht {
+	color: white;
+	font-weight: bold;
+	background-color: gray;
+}
+.at {
+	color: white;
+	font-weight: bold;
+	background-color: yellow;
+}

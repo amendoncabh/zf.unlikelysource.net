@@ -1,0 +1,56 @@
+<form method="POST">
+<?php
+
+        // Add an email element
+        echo $this->formLabel('email','Email:');
+        echo "\n<br />";
+        echo $this->formText('email', NULL, array('size'=>'40'));
+
+        // Add a name element
+        echo "\n<br />";
+        echo $this->formLabel('firstName','First Name:');
+        echo "\n<br />";
+        echo $this->formText('firstName', NULL, array('size'=>'24'));
+
+        // Add a name element
+        echo "\n<br />";
+        echo $this->formLabel('familyName','Family Name:');
+        echo "\n<br />";
+        echo $this->formText('familyName', NULL, array('size'=>'24'));
+
+        // Add the address element
+        echo "\n<br />";
+        echo $this->formLabel('address','Address:');
+        echo "\n<br />";
+        echo $this->formTextarea('address', NULL, array('rows'=>'4','cols'=>'40'));
+        
+        // Add a city element
+        echo "\n<br />";
+        echo $this->formLabel('city','City:');
+        echo "\n<br />";
+        echo $this->formText('city', NULL, array('size'=>'40'));
+     	   
+        // Add a state/province/county element
+        echo "\n<br />";
+        echo $this->formLabel('state_prov_cty','State/Province/County:');
+        echo "\n<br />";
+        echo $this->formText('state_prov_cty', NULL, array('size'=>'10'));
+
+        // Add a postalCode element
+        echo "\n<br />";
+        echo $this->formLabel('postalCode','Postal (Zip) Code:');
+        echo "\n<br />";
+        echo $this->formText('postalCode', NULL, array('size'=>'24'));
+        
+        // Supported countries
+		$keys = array_keys($this->options);
+        echo "\n<br />";
+        echo $this->formLabel('country','Country:');
+        echo "\n<br />";
+        echo $this->formSelect('country', $keys, NULL, $this->options);
+		 		        
+        // Add the submit button
+        echo "\n<br />";
+		echo $this->formSubmit('submit', 'Submit');
+?>
+</form>

@@ -1,0 +1,11 @@
+Go to application.ini and in the [development : production] section change:
+<hr />
+<br /><b>resources.view.strictVars</b> from TRUE to FALSE
+<br />What happens to the error message?
+<hr />
+<br /><?php echo $this->notfound; ?>
+<p>&nbsp;</p>
+<br /><b>resources.view.escape</b> from 'htmlspecialchars' to 'htmlentities' 
+<br />Do a "View Page Source" from your browser.  What happens to the text below?
+<hr />
+<br /><?php echo $this->escape($this->output); ?>

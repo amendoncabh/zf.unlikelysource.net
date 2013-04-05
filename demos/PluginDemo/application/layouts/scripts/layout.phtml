@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<?php echo $this->headTitle('Plugin Demo'); ?>
+	<?php echo $this->headLink()->headLink(array('rel'  => 'shortcut icon', 
+												 'type' => 'image/x-icon',
+												 'href' => '/images/favicon.ico')); ?>
+</head>
+<body>
+<table>
+<tr bgcolor="#CDFAF7"><td colspan=2><h1>Plugin Demo</h1></td></tr>
+<tr>
+<td bgcolor="#A7EAE6">
+<?php echo $this->navigation()->menu()->render(); ?>
+</td>
+<td>
+<?php echo $this->layout()->content; ?>
+</td>
+</tr>
+</table>
+</body>
+</html>

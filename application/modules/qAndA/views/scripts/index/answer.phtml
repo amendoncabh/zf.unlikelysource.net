@@ -1,0 +1,11 @@
+<?php if ($this->ques) : ?>
+	<h2><?php echo $this->escape($this->ques); ?></h2>
+	<?php foreach ($this->qAndA[$this->ques] as $item) : ?>
+		<br />
+		<?php echo $this->escape($item); ?>
+	<?php endforeach; ?>
+<?php else : ?>
+	Answer Not Found!
+<?php endif; ?>
+<hr />
+<a href="/qAndA">BACK</a>

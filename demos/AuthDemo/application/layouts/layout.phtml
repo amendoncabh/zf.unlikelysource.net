@@ -1,0 +1,93 @@
+<?php $config = Zend_Registry::get('config'); ?>
+<?php echo $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<?php echo $this->headMeta(); ?>
+	<?php echo $this->headTitle(); ?>
+	<?php echo $this->headLink()->prependStylesheet($this->baseUrl().'/css/site.css'); ?>
+	<style>
+	.header {
+		color: white;
+	    font-weight: bold;
+		font-size: 10pt;
+	    background-color: gray;	
+	}
+	</style>
+</head>
+<body>
+<table width=100%>
+	<tr>
+		<td valign=top width=33%>
+			<table>
+			<tr><td><h2>Auth Demo</h2></td></tr>
+			<?php if (isset($this->message)) : ?>
+			<tr><td><?php echo $this->message; ?></td></tr>
+			<?php endif; ?>
+			<tr><td>
+			<br /><?php echo date("Y-m-d h:i:s",time()); ?>
+			<br /><?php if ($this->loginForm) : ?>
+					<?php echo $this->loginForm; ?>
+					<div style="float:right;"><a href="/user/logout">LOGOUT</a></div>
+				  <?php else : ?>
+					<a href="/">BACK</a>
+				  <?php endif; ?>
+			</td></tr>
+			<tr><td>
+			<p>
+			NOTE 1: the password is the same as the name<br />
+			NOTE 2: Ed is duplicated<br />
+			NOTE 3: Try a name which is not on the list
+			</p> 
+			</td></tr>
+			<tr>
+			<td>
+				<table>
+				<tr>
+				<td>
+					<table>
+					<tr>
+					<td>
+					<span class="header">&nbsp;OpenID Auth Test&nbsp;</span>
+					</td>
+					</tr>
+					<tr>
+					<td>
+					<ul>
+					<li><a href="<?= $this->twitterAuthUrl ?>">Twitter login</a></li>
+					<li><a href="<?= $this->facebookAuthUrl ?>">Facebook login</a></li>
+					<li><a href="<?= $this->googleAuthUrl 
+								   . '?client_id=' 	 . urlencode($config['google']['client_id'])
+								   . '&redirect_uri=' . urlencode($config['google']['redirect_uri'])
+								   . '&scope='		 . urlencode($config['google']['scope'])
+								   . '&response_type='. urlencode($config['google']['response_type']) 
+								 ?>">Google login</a></li>
+					</ul>
+					</td>
+					</tr>
+					</table>
+				</td>
+				</tr>
+				</table>
+			</td>
+			</tr>
+			</table>
+		</td>
+		<td width=33%>
+			<table border=1>
+				<tr><th class="ht">Role</th><th class="ht">Access</th></tr>
+				<tr><th class="gt">green</th><td>Green Files</td></tr>
+				<tr><th class="rt">red</th><td>Red Files</td></tr>
+				<tr><th class="pt">purple</th><td>Both Red and Green Files</td></tr>
+				<tr><th class="gs">guest</th><td>Yellow Files</td></tr>
+				<tr><th class="at">admin</th><td>All Rights</td></tr>
+				<?php echo $this->users($this->list); ?> 
+			</table>
+		</td>
+		<td width=33%>
+			<?php echo $this->layout()->content; ?>
+			<br /><?php echo @$this->msg; ?>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

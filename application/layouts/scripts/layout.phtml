@@ -1,0 +1,195 @@
+<?php
+$showLeftColumn 	= isset($this->position_7);
+$showRightColumn 	= isset($this->position_6);
+
+$front 		= Zend_Controller_Front::getInstance();
+$template 	= $front->getParam('bootstrap')->getOption('template');
+
+$pageWidth	= $template['pageWidth'] - $template['outermargin'];
+
+if(isset($this->position_0)){
+	$searchWidth = $template['searchWidth'];
+} else {
+	$searchWidth = 0;
+}
+$headerrightWidth = $pageWidth + $template['outermargin'] - $template['logoWidth'] - 50;
+if ($showLeftColumn && $showRightColumn) {
+   $contentWidth = $pageWidth - $template['leftColumnWidth'] - $template['rightColumnWidth'] - (3 * $template['margin']);
+} elseif (!$showLeftColumn && $showRightColumn) {
+   $contentWidth = $pageWidth - $template['rightColumnWidth'] - (2 * $template['margin']);
+} elseif ($showLeftColumn && !$showRightColumn) {
+   $contentWidth = $pageWidth - $template['leftColumnWidth'] - (2 * $template['margin']);
+} else {
+   $contentWidth = $pageWidth - $template['margin'];
+}
+?>
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="/css/system.css" type="text/css" />
+<link rel="stylesheet" href="/css/general.css" type="text/css" />
+<link rel="stylesheet" href="/css/template.css" type="text/css" />
+<link rel="stylesheet" href="/css/grey.css" type="text/css" />
+<link href="/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+<!--[if IE 6]>
+<link rel="stylesheet" href="/css/ie6.css" type="text/css" />
+<style type="text/css">
+img, div, a, input { behavior: url(/iepngfix.htc) }
+</style>
+<script src="/js/iepngfix_tilebg.js" type="text/javascript"></script>
+<![endif]-->
+<!--[if lte IE 7]>
+<link rel="stylesheet" href="/css/ie67.css" type="text/css" />
+<![endif]-->
+<style type="text/css">
+ #logo {
+    width:<?php echo $template['logoWidth']; ?>px;
+ }
+ #headerright {
+    width:<?php echo $headerrightWidth; ?>px;
+	<?php if(isset($template['banner']) || $template['removeBanner']) : ?>
+       background: none;   
+    <?php endif; ?>
+ } 
+ #search {
+   width:<?php echo $searchWidth; ?>px;
+   height:<?php echo $template['searchHeight']; ?>px;
+ }
+ .size-10 {
+    font-size: 6pt;
+ }
+ .captcha_class {
+    float: left;
+    margin: 10px;
+ }
+ .etherpad_messages {
+	color: purple;
+ } 
+ #auth_name {
+	width: 190px;
+ }
+ #auth_pwd {
+	width: 190px;
+ }
+ #auth_captcha-input {
+	width: 190px;
+ }
+</style>
+<?php 
+if (isset($this->modCalled) && $this->modCalled == 'etherpad') {
+	$this->dojo()->setLocalPath('/js/dojo/dojo/dojo.js');
+	$this->dojo()->addStyleSheetModule('dijit.themes.tundra');
+	echo $this->dojo();
+}
+?>
+</head>
+<body class="tundra">
+
+<div id="allwrap" class="gainlayout" style="width:<?php echo $pageWidth + $template['outermargin']; ?>px;">
+
+<div id="headerwrap" class="gainlayout">
+  <div id="header" class="gainlayout">   
+      <div id="logo" class="gainlayout">
+        <?php if(isset($template['logo'])) : ?>
+          <?php echo $template['logo']; ?>
+        <?php endif; ?>
+      &nbsp;&nbsp;
+      <span style="font: bold 24pt helvetica sans;">
+      	<a href="#" title="<?php echo htmlspecialchars($template['logoText']); ?>"><?php echo htmlspecialchars($template['logoText']); ?></a>
+      </span>
+      </div>
+	  <div id="headerright" class="gainlayout">
+        <?php if(isset($template['banner'])) : ?>
+          <div id="banner">
+          <?php echo $template['banner']; ?>
+          </div>
+        <?php endif; ?>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+  </div>	  
+  <div class="clr"></div>
+</div>
+
+<div id="topmenuwrap" class="gainlayout">
+  <?php if(isset($this->position_1)) : ?>
+         <div id="topmenu" class="gainlayout">
+           <?php 
+           	foreach ($this->position_1 as $item) {
+	      		if (is_object($item) && get_class($item) == 'Zend_Navigation') {
+	           		echo $this->navigation()->menu()->renderMenu($item, array('ulClass' => 'menu'));
+	           	} else {
+	           		echo $item;
+	           	}
+           	} 
+           ?>
+           <div class="clr"></div>
+         </div> 
+  <?php endif; ?>
+  <?php if(isset($this->position_0)) : ?>
+        <div id="search" class="gainlayout">
+          <?php echo $this->position_0; ?> 
+		<div class="clr"></div>  
+        </div>
+  <?php endif; ?>
+  <div class="clr"></div>
+</div> 
+
+<div id="wrap" class="gainlayout">
+
+  <?php if(isset($this->position_2)) : ?>
+	  <div id="pathway" class="gainlayout">
+        <?php echo $this->position_2; ?>
+      <div class="clr"></div>
+	  </div>
+  <?php endif; ?> 
+  <div id="cbody" class="gainlayout">
+  <?php if($showLeftColumn) : ?>
+  <div id="sidebar" style="width:<?php echo $template['leftColumnWidth']; ?>px;">
+      <?php 
+      	foreach ($this->position_7 as $item) {
+       		if (is_array($item) && isset($item['type']) && $item['type'] == 'menu') {
+       			echo '<div class="moduletable_menu">' . PHP_EOL;
+       			echo $this->leftMenu($item);
+       			echo '</div>' . PHP_EOL;
+       		} else {
+       			echo $item;
+       		}
+      	}
+      ?>
+      <h3>IE Users:</h3>
+      Note that you may have to set "compatibility" mode on!
+      </ul>
+  </div>
+  <?php endif; ?>
+  <div id="content60" style="width:<?php echo $contentWidth ?>px;">    
+
+      <div id="content" class="gainlayout">
+      <?php echo $this->layout()->content; ?>
+      </div>    
+  </div>
+  <?php if($showRightColumn) : ?>
+  <div id="sidebar-2" style="width:<?php echo $template['rightColumnWidth']; ?>px;">     
+      <?php echo $this->position_6; ?>     
+  </div>
+  <?php endif; ?>
+  <div class="clr"></div>
+  </div>
+  
+<!--end of wrap-->
+</div>
+    
+<!--end of allwrap-->
+</div>
+<div id="footerwrap" class="gainlayout" style="width:<?php echo $pageWidth + $template['outermargin']; ?>px;"> 
+  <div id="footer" class="gainlayout">  
+       <?php if(isset($this->position_14)) : ?>	
+         <?php echo $this->position_14; ?>    
+       <?php endif; ?>
+  </div>
+  <div id="unlikelysource-footer">&copy; 2012 <a href="http://unlikelysource.com/">unlikelysource.com</a> all rights reserved</div> 
+</div>
+
+</body>
+</html>

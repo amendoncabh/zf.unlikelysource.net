@@ -1,0 +1,16 @@
+; username:realm:(md5(username:realm:password))
+; all user passwords = username (i.e. password for user "red" = "red")
+red:unlikelysource:6af56a23611e866eb26a1d6051e58d63
+green:unlikelysource:2c6e11b1cb028783f3525b96f38ea72b
+purple:unlikelysource:f2b15cd132699c82850421a63b4677ad
+admin:unlikelysource:9d3fc0e7f28df65a7664fdec8a993d79
+fred:unlikelysource:d4d0c289da60da2569efe4f32ab98858
+ted:unlikelysource:9b71eb82069dbb05313ad7e453d5275c
+ed:unlikelysource:3aa1e8b50d305032d498092ab9acf567
+ed:unlikelysource:3aa1e8b50d305032d498092ab9acf566
+brady:unlikelysource:b144e8c8728a2311cef7eef81d1536b3
+shannon:unlikelysource:1dd1707e34e5c39987e04af58ed048ba
+fiona:unlikelysource:1cf0a4363e7bfc4a7b0f450875a6536c
+phyllis:unlikelysource:55a3f74d92477c35d5f603b376b2bab4
+michael:unlikelysource:46a49d7425e8e6b760b7a7b128809411
+dwayne:unlikelysource:7a514a9d83c2c3425e08148b9cc10ec2

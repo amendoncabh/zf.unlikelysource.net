@@ -1,0 +1,1180 @@
+Q: Why are there 2 user services in the Wikiapp (one under application/models, one under application/modules/wiki/models)?
+A: One is for general use -- i.e. logging in.  The other is for module use -- i.e. user abilities to manage articles.
+
+Q: Does ZF Full include sample tests?
+A: Yes.  Look in /usr/local/zend/share/ZendFramework/tests/Zend for the suite of tests used against ZF itself.
+
+Q: Can you suggest any ZF Test tutorials?
+A: http://www.zendcasts.com/unit-testing-with-the-zend-framework-with-zend_test-and-phpunit/
+
+Q: What is the autocomplete parameter in the form element?
+A: setAutocomplete($flag): indicate whether or not the selected item will be used when the user leaves the element. 
+   REF: http://framework.zend.com/manual/en/zend.dojo.form.html
+
+Q: What is the syntax for zf tool to create controller for a module?
+A: zf create controller {CONTROLLER} --module={MODULE}
+   NOTE: only works if the project profile has info on the module!
+   NOTE: see wikiapp.work/scripts/create-zf-project.sh
+
+Q: Why use a custom QueryReadStore?
+A: If you were to use the built-in dojo QueryReadStore directly, you'd be limited to POST requests, submitting it as a raw post. Second, and related, this means that requests could not be cached client-side. Fortunately, there's an easy way to correct the situation: extend dojox.data.QueryReadStore and override the fetch method to rewrite the query as a simple GET query with a single parameter. 
+
+Q: Does Zend_Translate provide support for plurals?
+A: Yes.  See: http://framework.zend.com/manual/en/zend.translate.plurals.html
+
+Q: How do you use Zend_Translate with Zend_Form?
+A: Either set default in registry (Zend_Registry::set('Zend_Translate', $translate);) 
+   or Zend_Form::setDefaultTranslator($translate);
+   or $form->setTranslator($translate);
+A: If you are only worried about validation messages: Zend_Validate_Abstract::setDefaultTranslator($translate);
+
+Q: I read somewhere in the docs that if a Zend_Locale key exists in the Registry and it actually contains a Zend_Locale object, then some components will use it by default.  Is that true?
+A:  Zend Framework 1.7+ allows the usage of an application wide locale. You simply set an instance of Zend_Locale to the registry with the key 'Zend_Locale'. Then this instance will be used within all locale aware classes of Zend Framework. This way you set one locale within your registry and then you can forget about setting it again. It will automatically be used in all other classes. See the below example for the right usage:
+
+Example 29.9. Usage of an application wide locale
+
+// within your bootstrap
+$locale = new Zend_Locale('de_AT');
+Zend_Registry::set('Zend_Locale', $locale);
+
+// within your model or controller
+$date = new Zend_Date();
+// print $date->getLocale();
+echo $date->getDate();
+
+REF: http://files.zend.com/help/Zend-Framework/zend.locale.html
+
+Q: With regards Zend_Translate; in the view it is recommended that you use $this->escape() on everything that is echoed to the screen. If you use $this->translate->_(), does this perform escaping for you? 
+A: No.  From the view you'd need to do something like this:
+   $this->escape($translate->_('Translate String'));
+
+Q: Zend_Locale::FRAMEWORK I believe is called ZFDEFAULT in 1.10
+A: That is correct according to the API docs for 1.10!
+
+Q: Where do you find OS fonts?
+A: http://ostatic.com/blog/five-resources-for-open-source-fonts
+
+Q: Quick question on the pdfArticle method in the ArticleService controller ... within the foreach loop, I see where the lines are added to the page. Then if the $count goes over the $linesPerPage then a new page is created. But I don't see where $count is reset to 1. Or does it need to be?
+A: Correct -- $count needs to be set to 1!
+
+Q: Is there a paginator example using db?
+A: SEE zend_paginator.php
+
+Q: Are there any benchmarks for zend_cache query vs. db query?
+A: SEE: 
+http://www.survivethedeepend.com/zendframeworkbook/en/1.0/performance.optimisation.for.zend.framework.applications
+http://stackoverflow.com/questions/1010699/php-object-caching-performance
+http://akrabat.com/php/notes-on-zend_cache/
+??? benchmarks ???
+
+Q: What is the difference between RSS vs. Atom?
+A: http://www.intertwingly.net/wiki/pie/Rss20AndAtom10Compared
+
+Q: Where do zf locale defs come from?
+A: From the php.ini file
+
+Q: Where can I find options for resources?
+A: http://framework.zend.com/manual/en/zend.application.available-resources.html
+A: NOTE: #11 -- configuring modules.  Example, module "news":
+news.resources.db.adapter = "pdo_mysql"
+news.resources.db.params.host = "localhost"
+news.resources.db.params.username = "webuser"
+news.resources.db.params.password = "XXXXXXX"
+news.resources.db.params.dbname = "news"
+
+Q: Example of resource plugin -- do diagnostic plugin as a resource?
+A: Actually ... this won't work!  Resources are configured in the application, but are then called directly when needed.  An example would be when you configure a database connection as a resource, and then create a Zend_Db_Table object.  Another example is the View Renderer resource plugin.
+A: REF: http://framework.zend.com/manual/en/zend.application.theory-of-operation.html#zend.application.theory-of-operation.resources
+
+Q: How can we refresh the .zfproject.xml file?
+A: REF: http://www.devcomments.com/Purpose-of-zfproject-xml-project-file-at109212.htm
+In the future, there will be a way for Zend_Tool to determine and/or 
+scan an existing project for classes and files you've created by hand. (dated 15 Mar 2010)
+
+Q: Zend Server + mssql adapter -- any issues?
+A: Read the docs at http://www.php.net/pdo-dblib; pdo_dblib (Zend_Db_Adapter_Pdo_Dblib)
+   NOTE: This extension is not available anymore on Windows with PHP 5.3 or later!!!
+To use the MSSQL extension on Unix/Linux, you first need to build and install the FreeTDS library. Source code and installation instructions are available at the FreeTDS home page: » http://www.freetds.org/
+   REF: http://www.microsoft.com/sqlserver/2005/en/us/PHP-Driver.aspx
+   REF: http://msdn.microsoft.com/en-us/library/cc296221.aspx
+   REF: http://pointbeing.net/weblog/2010/05/successful-microsoft-sql-server-support-for-php-on-linux.html
+   REF: http://forums.zend.com/viewtopic.php?f=69&t=7850&start=0&hilit=mssql
+
+Q: What are the hard-coded file associations (i.e. plugins, models, views, etc.)?
+A: Look at the method initDefaultResourceTypes() in this file:
+   Zend/Application/Module/Autoloader.php
+
+Q: Why wouldnt code complete work on my VM in zend studio?
+A: Need to add the ZendFramework library.  This can be done by selecting Projects - Properties - PHP Include Path - Libraries.
+
+Q: How do I turn off automatic escaping when using Zend_Form?
+A: On an element level, you can set do $element->setAttrib('escape', FALSE).  Note that slashes might be added at the PHP level.
+   Check that the php.ini parameter "magic_quotes_gpc" is set off.
+   REF: http://stackoverflow.com/questions/3621508/zend-form-setattribescape-false-not-working-help
+   You can retrieve raw post values from $this->getRequest()->getParam('field')
+   You can get unfiltered form values as $form->getUnfilteredValue('field')
+   Also, the value echoed back in the "value=" attribute is filtered by Zend_View.  This can be overridden using $this->view->setEscape()
+   (defaults to htmlspecialchars())
+   SEE: formdemo
+
+Q: Is phpunit included w/ ZF -- command line?
+A: phpunit functionality is included under Zend_Test.  To perform command line testing requires the "phpunit" command.
+   REF: http://www.phpunit.de/manual/current/en/textui.html
+   NOTE: might be available as a package on some Linux distros
+
+Q: How do we load the jquery framework?  Do you know if jQuery follows a similar syntax?
+A: JQuery has a class ZendX_JQuery_Form which extends Zend_Form
+   There are also the following classes:
+   ZendX_JQuery_View_Helper_*
+	AccordionContainer, AccordionPane, AjaxLink, AutoComplete, ColorPicker, DatePicker, 
+	DialogContainer, JQuery, Slider, Spinner, TabContainer, TabPane, UiWidgetPane, UiWidget
+   ZendX_JQuery_Form_Element_*
+	AutoComplete, ColorPicker, DatePicker, Slider, Spinner, UiWidget   
+   ZendX_JQuery_Form_Decorator_*
+	AccordionContainer, AccordionPane, DialogContainer, TabContainer, TabPane, UiWidgetContainer, 
+	UiWidgetElementMarker, UiWidgetElement, UiWidgetPane
+
+Q: What does 'enabling' the view do, programatically?
+A: Adds Zend_Dojo_View_Helper_ to pluginloader broker:
+["helper"] => object(Zend_Loader_PluginLoader)#35 (4) {
+      ["_loadedPluginPaths":protected] => array(0) {
+      }
+      ["_loadedPlugins":protected] => array(0) {
+      }
+      ["_prefixToPaths":protected] => array(2) {
+        ["Zend_View_Helper_"] => array(2) {
+          [0] => string(17) "Zend/View/Helper/"
+          [1] => string(46) "/var/www/HelloWorld/application/views/helpers/"
+        }
+        ["Zend_Dojo_View_Helper_"] => array(1) {
+          [0] => string(22) "Zend/Dojo/View/Helper/"
+        }
+      }
+      ["_useStaticRegistry":protected] => NULL
+    }
+SEE: helloworld/test/prevdojo & helloworld/test/postdojo
+
+Q: Why dojo enable the view + put $this->dojo()->enable() in the view script?
+A: You can do one or the other.  Both is redundant.
+
+Q: Is Zend_Form locale aware? Will dates appear in locale format?
+A: No: dates should be formatted using Zend_Locale_Format or Zend_Date.  Numbers should be formatted using Zend_Locale_Format.
+
+Q: Is it ok to put REST parameters in the header?  Like a post?
+A: REST parameters will come into the application like an HTML form post -- but this is determined by the REST client.
+   The REST client could also make a request using a URL with embedded parameters (i.e. /wiki/rest/get/title/London), which your
+   REST controller could then process.
+
+Q: I dont know whether it was because I missed it, but did you have a simple jquery example? Is there a place where we can see some docs?
+A: Docs: http://framework.zend.com/manual/en/zendx.jquery.html
+   Tutorial: http://www.youtube.com/watch?v=MIHrwX6dW24
+   Examples: http://zendgeek.blogspot.com/2009/07/zend-framework-and-jquery-jquery-date.html
+             http://zendgeek.blogspot.com/2009/07/creating-jquery-form-in-zend-framework.html
+             http://stackoverflow.com/questions/746676/integrating-jquery-jquery-ui-and-jquery-themes-with-the-zend-framework
+
+Q: What does "Vary" imply about caching?  I expected for it be Vary=nocache or something like that.
+A: The Vary field value indicates the set of request-header fields that fully determines, while the response is fresh, whether a cache is permitted to use the response to reply to a subsequent request without revalidation. For uncacheable or stale responses, the Vary field value advises the user agent about the criteria that were used to select the representation. A Vary field value of "*" implies that a cache cannot determine from the request headers of a subsequent request whether this response is the appropriate representation. See section 13.6 for use of the Vary header field by caches. REF: http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html
+
+Q: Why are ALL module bootstraps run?
+A: Short answer: bootstrapping occurs *before* routing, this Zend_Application has no idea yet that the request involves a module.
+A: Long answer: see http://weierophinney.net/matthew/archives/234-Module-Bootstraps-in-Zend-Framework-Dos-and-Donts.html
+
+Q: http://stackoverflow.com/questions/4037787/module-model-not-loading thats my question
+A: Add the following line to your application.ini file (where 'xxx' is the module):
+   resources.modules.xxx = "enabled"
+   ; or
+   resources.modules[] = ""
+   REF: http://stackoverflow.com/questions/2109090/zend-framework-models-not-loading-by-autoloader
+   REF: http://framework.zend.com/manual/en/zend.application.available-resources.html#zend.application.available-resources.modules
+   *Plus* you MUST create a module Bootstrap.php which has the following class (where "Xxx" = module name)
+   class Xxx_Bootstrap extends Zend_Application_Module_Bootstrap {}
+
+
+Q: What is a SOAP "strategy"?
+A: It is designed to allow for complex data types over and above string, int, boolean, etc.
+   see: REF: http://framework.zend.com/manual/en/zend.soap.wsdl.html#zend.soap.wsdl.types.add_complex
+
+Q: What is the "vary" header?
+A: The Vary field value indicates the set of request-header fields that fully determines, while the response is fresh, whether a cache is permitted to use the response to reply to a subsequent request without revalidation
+
+Q: Reference to config file to define a form?
+A: See http://framework.zend.com/manual/en/zend.form.forms.html
+   (Look for the heading "Configuration")
+
+Q: How do you get the bootstrap from a controller?
+A: $bootstrap = $this->getInvokeArg('bootstrap');
+
+Q: Does Zend_Test support mock objects from PHPUnit?
+A: Yes
+
+Q: What is meant in Mod 4 Slide 12 the last point (Zend_Date setOption(array('fix_date' => true)))?
+A: If setOption(array('fix_date' => true)) is set the getDate() method adds a key 'fixed' with a whole number value indicating if the input date string required "fixing" by rearranging the day, month, or year in the input to fit the format used. 
+  REF: http://framework.zend.com/manual/en/zend.locale.date.datesandtimes.html
+
+Q: In what order are module bootstraps executed?
+A: The order in which the modules are defined.  See the following for a good explanation of module bootstrapping:
+   REF: http://monzee.wordpress.com/2009/06/08/modular-applications-in-zf-1-8/
+
+Q: Coding for plugins vs. Plugin etc.?
+A: See initDefaultResourceTypes() method in Zend_Application_Module_Autoloader 
+
+Q: Slide 34 mod 1 - camelCase vs. camel-case; MixedCase vs. mixed-case
+A: The issue is that PHP is case insensitive when it comes to
+   function/method names. So a url of 'iAmCamelCased' would be inflected in
+   the dispatcher to dispatch the iamcamelcased() method -- which would
+   execute the same as if they url 'i-am-camel-cased' was called (which
+   maps to iAmCamelCased()' -- both are valid ways to call the method.
+   However, on the view end, we do the same normalization that the
+   dispatcher does -- which means you have two very differently named
+   scripts: iamcamelcased.phtml vs i-am-camel-cased.phtml. 
+   REF: http://zend-framework-community.634137.n4.nabble.com/
+   Naming-Recommendation-for-Controllers-Actions-and-URLs-using-zend-controller-td649564.html (see Matthew's comment)
+   REF: http://develop2travel.wordpress.com/2008/03/28/naming-recommendation-for-controllers-actions-urls-using-zend_controller/
+
+Q: Are there preformance considerations doing forms that way? (zend_config)
+A: None
+
+Q: How does ZF know where to find my resource class?
+A: Via our configuration file, using the "pluginPaths" key. This is an array, with the keys being plugin class prefixes, and the values the path that corresponds to that prefix.
+
+[production]
+; ...
+pluginPaths.Phly_Resource = "Phly/Resource"
+resources.layouthelpers.doctype = "HTML5"
+resources.layouthelpers.title = "My Snazzy New Website"
+resources.layouthelpers.title_separator = " &emdash; "
+
+You can register as many plugin paths as you desire. As this key is processed before any resources are processed, it can also be defined at any time in your configuration. 
+
+REF: http://weierophinney.net/matthew/archives/231-Creating-Re-Usable-Zend_Application-Resource-Plugins.html
+
+Q: Any examples of writing to db from AJAX?
+A: Haven't found good examples ... but found some good ZF / Dojo examples:
+REF: http://zendgeek.blogspot.com/search/label/Dojo
+
+Q: How do you get a database adapter instance from a resource plugin?
+A:
+1.	Get an instance of the bootstrap object:
+	$bootstrap = $this->getFrontController()->getParam('bootstrap');
+2.	Have a look at available plugin resources
+	Zend_Debug::dump($bootstrap->getPluginResourceNames(), "PLUGIN RESOURCES");
+3.	Get an instance of the database resource
+	$resourceDb = $bootstrap->getPluginResource('db');
+4.	Get an instance of the adapter
+	$adapter = $resourceDb->getDbAdapter();
+
+Q: Why should you implement all 4 verbs in rest controller?
+A: The 4 verbs are defined as abstract classes.  If not implemented, will received this message:
+Fatal error:  Class Wiki_RestController contains 3 abstract  methods and must therefore be declared abstract or implement the  remaining methods (Zend_Rest_Controller::postAction,  Zend_Rest_Controller::putAction, Zend_Rest_Controller::deleteAction) in /workspace/wikiapp.complete/application/modules/wiki/controllers/RestController.php on line 3
+Other references:
+REF: http://weierophinney.net/matthew/archives/228-Building-RESTful-Services-with-Zend-Framework.html#extended
+REF: http://framework.zend.com/manual/en/zend.controller.router.html#zend.controller.router.routes.rest
+
+Q: I am just wondering how to override the default frontcontroller?
+A: Create a custom class with the same suffix (i.e. _Controller_Front) and override the getInstance() method at a minimum.
+REF: http://framework.zend.com/manual/en/zend.controller.front.html see "Extending the Front Controller"
+
+Q: What is the purpose of "jsId" in autocomplete?  Why does autocomplete still work if ids don't match? 
+A: Ties the form element to the <div> repository.  Unknown.
+
+Q: How do you set and retrieve flash messenger messages?
+A: From a controller: 
+    TO SET:
+    $flashMessenger = $this->_helper->getHelper('FlashMessenger');
+    $flashMessenger->addMessage('This is a test');
+
+    TO RETRIEVE:
+    $flashMessenger = $this->_helper->getHelper('FlashMessenger');
+    $this->view->messages = $flashMessenger->getMessages();
+    REF: http://framework.zend.com/manual/en/zend.controller.actionhelpers.html
+
+Q: Built-in PHP functions are not recognized in ZS in the VM.  How do I fix this?
+A: REF: http://kb.zend.com/index.php?View=entry&EntryID=415
+
+PROBLEM: PHP built-in functions appear in Zend Studio as undefined
+SOLUTION: replace the contents of the project's .buildpath file with the following:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+    <buildpathentry kind="src" path=""/>
+    <buildpathentry kind="con" path="com.zend.php.phpunit.CONTAINER"/>
+    <buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+    <buildpathentry kind="con" path="org.zend.php.framework.CONTAINER"/>
+</buildpath>
+
+1. You need to first CLOSE the project in Zend Studio
+2. Open the .buildpath file, which is in the root of the project directory and replace the content
+3. In Zend Studio Open the project
+4. Then do Project - Clean
+
+REF: http://kb.zend.com/index.php?View=entry&EntryID=415
+
+Q: How does Zend_Locale get its info on the browser?  If it is in the scope of Zend_Application, it's clear
+   but, I thought this was supposed to work standalone as well.
+A: BROWSER locale reads from $_SERVER["HTTP_ACCEPT_LANGUAGE"]
+   ENVIRONMENT reads from the server environment; from Zend/Locale.php - getEnvironment() :
+     * Expects the Systems standard locale
+     * For Windows:
+     * f.e.: LC_COLLATE=C;LC_CTYPE=German_Austria.1252;LC_MONETARY=C
+     * would be recognised as de_AT
+   FRAMEWORK is hard coded in Zend/Locale.php as protected static $_default = array('en' => true);
+	unless specified when the locale object is constructed (i.e. $locale = new Zend_Locale('de_AT');
+
+Q: Where in the API docs are preset constants for zend_locate_format?
+A: http://framework.zend.com/manual/en/zend.date.constants.html
+A: http://framework.zend.com/apidoc/1.11/_Date.html#Zend_Date
+
+Q: What does ZS "clean" do?
+A: This option sets the build flag so that the next time the project is built, all resources, even those which have not changed, are built.  (A "build" is a process which derives new resources from existing ones, updates existing resources, or both.)
+
+Q: When setting-up a mock's expectations for passed parameters (ie $mock->with(...)), is there a constraint for 'the same object'? (I need to check, that the mocked method got a specific object as a parameter.) There is an 'equalTo' constraint, but it is not suitable for objects, if I am not mistaken?  Unfortunately assertSame is not available as a constraint for with() when using a mock.  Any suggestions?
+A: Try PHPUnit_Framework_Constraint_IsIdentical identicalTo(mixed $value) or 
+   PHPUnit_Framework_Constraint_IsInstanceOf isInstanceOf(string $className)
+REF: http://www.phpunit.de/manual/3.5/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.assertions.assertThat.tables.constraints
+
+Q: Why can't I see Zend_Loader_Autoloader::getInstance(); anywhere in our VM's wikiapp.complete or wikiapp.work? By default, is Zend_Controller_Front instantiated automatically by Zend_Application? 
+A: As of ZF 1.8 the Zend_Application class was introduced.  This class sets up the autoloader + front controller, and handles bootstrapping, routing and dispatching.
+A: See also: http://weierophinney.net/matthew/archives/262-Backported-ZF2-Autoloaders.html
+
+Q: We do not need to execute instantiating the Front Controller in code, and only use Zend_Controller_Front::getInstance() if we want to register a plugin or access some property or method of the Front Controller, right? 
+A: Correct.
+
+Q: Why didn't we have to $front->setControllerDirectory('/path/to/plugins') or $front->dispatch();?
+A: Front controller properties can now be configured as resources in the application.ini file.  To set the controller directory, add this to the application.ini file: 
+resources.frontController.controllerDirectory = PATH_TO_CONTROLLERS_DIRECTORY
+
+Q: How can we know the complete possibilities from the application.ini file?
+A: Not possible to know *all* because you can add *anything* to the application.ini file.
+A: Here is the documentation reference for built-in resources.* 
+   http://framework.zend.com/manual/en/zend.application.available-resources.html
+A: (from Matthew) No, unfortunately. Most options are documented with the individual
+application resources. Otherwise, looking at the API docs for resources
+will provide you with a list of setter methods -- and each of those can
+be considered an option key.  (This is an area we plan to address for ZF2.)
+
+Q: What are the flags for verbose and debug when using Zend_Tool?
+A: Basic command line usage: http://zendframework.com/manual/en/zend.tool.usage.cli.html
+A: zf --verbose --debug <action-name> 
+
+Q: I'm working on the same project from different computers(Home/Work) and the Zend_Tool is not always upto date with the project structure. Also some elements are built manually, so models/controllers are not recognized. How to rebuild the project structure for Zend_Tool? (I think the .zfproject.xml file is involved here)
+A: According to Matthew, this feature is currently unsupported.  According to Ralph (Schindler), who is the lead on Zend_Tool,
+   it will be a high priority feature addition for ZF2
+   See: http://zend-framework-community.634137.n4.nabble.com/Keeping-zfproject-xml-up-to-date-with-Zend-Tool-td2526512.html
+
+Q: What is the param to set a GET when testing?
+A: Docs found under Zend_Controller_Request_Http.
+A: setQuery() sets "GET" params; setPost() sets "POST" params
+
+Q: What is the flag used with Zend_Json::encode() to support recursion?
+A: encode( mixed $valueToEncode, boolean $cycleCheck = false, array $options = array )
+$valueToEncode - mixed
+$cycleCheck - boolean
+    Optional; whether or not to check for object recursion; off by default 
+$options - array
+    Additional options used during encoding 
+
+Q: Are there working possibilities to use couchDB or Cassandra?
+A: At present there are no PHP extensions to support these.  For the future ... ???
+
+Q: How can you create a model in a subdir like: application/models/foo/foo1.php using Zend_Tool?
+A: No: Zend_Tool uses the pre-defined resource types (see Zend/Loader/Modules/Autoloader.php) which
+   include "*_Model_*" => "models" and "*_Model_DbTable_*" => "models/DbTable".
+A: Best solution is to write a Zend_Tool extension which creates the directory and does the mapping for you.
+
+PDF Questions:
+Q: Is there a possibility to change Zend_Pdf metrics to mm? 
+A: No.
+
+Q: What is the "engine" based on? 
+A: Written entirely in PHP 5
+
+Q: Php pdf functions?
+A: Need to look at the docs: there are too many to list here.
+
+Q: Does it work with UTF8 strings? 
+A: Yes.  The $page->drawText() method has a character encoding parameter:
+   drawText( string $text, float $x, float $y, string $charEncoding ) 
+A: Example: Draw a UTF-8-encoded string on the page
+      // Read a UTF-8-encoded string from disk
+      $unicodeString = fread($fp, 1024);
+      // Draw the string on the page
+      $pdfPage->drawText($unicodeString, 72, 720, 'UTF-8');
+   REF: http://framework.zend.com/manual/en/zend.pdf.drawing.html
+
+Q: Can you calculate the length of a string based on the font/size settings?
+A: Yes.  See: http://stackoverflow.com/questions/1283555/zend-pdf-calculating-length-of-text-string-in-current-font-for-line-wrapping
+
+Q: can you sign the pdf with a certificate?
+A: Not with this version.  See: http://framework.zend.com/issues/browse/ZF-13
+A: Here is some code which might help: http://tuanngominh.wordpress.com/2009/09/21/encryption-for-zend_pdf/
+
+Q: How is the performance?
+A: No benchmarks available, but there are some PHP performance testing tools which might apply:
+   http://www.room4me.com/techtools/RawLoadTester/index.html
+   http://pear.php.net/package/benchmark/redirected
+   http://code.google.com/p/dbench/
+A: Here is a good article on this subject: http://www.linuxjournal.com/article/7213
+
+Q: Are there any facilities for wrapping text?
+A: No.  See custom method drawTextBlock() http://framework.zend.com/wiki/display/ZFPROP/Zend_Pdf+text+drawing+improvements+-+Nico+Edtinger
+A: See: http://www.ehow.com/how_2226138_wrap-text-zendpdf.html
+
+Q: What is the difference between Zend_Cache clean() and remove()?
+A: remove() is for a specific instance of cache whereas clean() uses tags to remove multiple instances of cache.
+
+Q: How do you designate custom namespaces?
+A: By default, the autoloader is configured to match the "Zend_" and "ZendX_" namespaces. 
+   If you have your own library code that uses your own namespace, you may register it 
+   with the autoloader using the registerNamespace() method. For instance, if your library 
+   code is prefixed with "My_", you could do so as follows: $autoloader->registerNamespace('My_');
+   REF: http://framework.zend.com/manual/en/zend.loader.autoloader.html
+   Alternatively, in the application.ini, to add the custom classes library/A and library/B:
+   autoloaderNamespaces[] = "A_"
+   autoloaderNamespaces[] = "B_"
+
+Q: Does the Zend_Pdf_Page drawText() method support word wrap?
+A: No.  There is a proposal currently developed by Nico Edtinger, however.
+   See: http://framework.zend.com/wiki/display/ZFPROP/Zend_Pdf+text+drawing+improvements+-+Nico+Edtinger
+A: The actual code proposed by Nico can be viewed on the code archive.
+   See: Zend_Pdf_Page_Nico_Edtinger.php in the Zend Framework area
+
+Q: Is there a PHP continuous integration server available?
+A: Jenkins (formerly Hudson): http://edorian.posterous.com/setting-up-jenkins-for-php-projects
+A: PHPUndercontrol: http://phpundercontrol.org/
+
+Q: Standalone example of autocomplete
+A: See example posted on http://www.unlikelysource.com/class/zfa.html
+
+Q: Is there an open source project which does automated testing?
+A: See: http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#PHP
+
+Q: Where is the ZendX documentation?
+A: For jQuery see: http://framework.zend.com/manual/en/zendx.jquery.html
+A: See also: http://framework.zend.com/manual/en/zendx.console.process.unix.overview.html
+
+Q: So if I'm running Zend Cluster and I use one of the Zend Server backends my cache is cluster aware?
+A: Memcache running on Zend Server is cluster aware.  
+   REF: http://www.zend.com/topics/Zend-Server-Data-Caching-Whitepaper-0106-T-WP-R1-EN.pdf
+   Interestingly ... there *is* support for Session clustering!
+
+Q: re: Zend_Navigation: from Carl Parrish to All Participants: If you set 'order' to '200', would the next one be 201 or 1?
+A: No.  The 'order' parameter is used to force the order in which menu items display.  If 'order' is not set, default = NULL.
+   Example:
+   $navigate->addPage(new Zend_Navigation_Page_Uri(array('label' => 'One', 'order' => 1, 'uri' => 'http://xyz.com/test'));
+   $navigate->addPage(new Zend_Navigation_Page_Uri(array('label' => 'Two', 'order' => 2, 'uri' => 'http://xyz.com/test'));
+   $navigate->addPage(new Zend_Navigation_Page_Uri(array('label' => 'Three', 'order' => -1, 'uri' => 'http://xyz.com/test'));
+   // displays as 'Three', 'One', 'Two'
+
+Q: re: Zend_Navigation: how do I put CSS classes on them?
+A: When adding a Zend_Navigation_Page_* object, use the 'class' parameter.  Example:
+   $navigate->addPage(new Zend_Navigation_Page_Uri(array('label' => 'Test', 'class' => 'menuPage', 'uri' => 'http://xyz.com/test'));
+
+Q: Any good web article about zf cache? In general, I would appreciate if you could suggest us good php resources 
+   (book, blog, twitter accounts, etc...)
+A: REF: http://www.slideshare.net/e.zimuel/zendcache-how-to-improve-the-performance-of-php-applications
+   REF: http://www.stoimen.com/blog/2011/01/17/a-memcached-zend_cache/
+
+Q: How do you override the default phtml extension?
+A: Discussion on phtml: http://akrabat.com/php/questions-regarding-the-latest-tutorial-130/
+   To change: modify the "viewSuffix " property of Zend_Controller_Action.
+   I.e., if you want to use "php", from the controller, execute the following:
+   $this->viewSuffix = "php";
+
+Q: How do I get rid of old run configs in ZS?
+A: Delete the file in the run config screen
+
+Q: Does pubsubhubub do a redirect to the other server?
+A: See http://framework.zend.com/manual/en/zend.feed.pubsubhubbub.introduction.html
+
+Q: Do you have code to illustrate routing?
+A: see the RouteDemo
+
+Q: What is the difference between queryreadstore and ItemFileReadStore?
+A: ItemFileReadStore pulls everything into a js array (like jQuery source = data)
+
+Q: How do you get the bootstrap from a controller?
+A: $front = Zend_Controller_Front::getInstance();
+   $bootstrap = $front->getParam('bootstrap');
+   $resource = $bootstrap->getResource('name_of_resource');
+   // alternative (from controller)
+   $bootstrap->getPluginResource('name_of_resource');
+
+Q: Matthew's article on re-using bootstrap resources
+A: Bootstrap Resource Plugins: http://mwop.net/blog/231-Creating-Re-Usable-Zend_Application-Resource-Plugins.html
+
+Q: Is is possible to use ZF without mod_rewrite?
+A: Yes.  See: 
+http://www.zfforums.com/zend-framework-general-discussions-1/installation-configuration-3/apache-without-mod_rewrite-149.html
+http://akrabat.com/zend-framework/zend-framework-urls-without-mod_rewrite/
+http://stackoverflow.com/questions/13698/php-zend-mvc-without-mod-rewrite
+
+Q: If you need something to happen BEFORE any headers are set, where do you do this?
+A: Bootstrap;  i.e. when setting cookies, or working with sessions
+
+Q: When using $this-> _forward(), when is the object instance unset, and does the controller always get instantiated twice?
+A: (from Matthew) The dispatcher does not keep a registry of previous controllers. As such, each time through the dispatch loop, it instantiates a new controller, even if that controller has been referenced before.
+
+The previous instance is never explicitly unset, but it goes out of scope when the dispatcher's dispatch() method finishes (which happens
+between the action controller's postDispatch() and the front controller's postDispatch()).
+
+Q: Given the following code:
+> > 
+> > class DispatchController extends Zend_Controller_Action {
+> >     public function init() {  echo "<br />Init\n"; }
+> >     public function preDispatch() { echo "<br />Pre Dispatch\n"; }
+> >     public function postDispatch() { echo "<br />Post Dispatch\n"; }
+> >     public function indexAction() {
+> >         echo '<br />Before Forward';
+> >         $this->_forward("test","dispatch");
+> >         echo '<br />After Forward';
+> >     }
+> >     public function testAction() {
+> >         echo '<br />' . Zend_Version::VERSION;
+> >     }   
+> >     public function redirectAction() {
+> >         echo '<br />Before Redirect';
+> >         $this->_redirect('/');
+> >         echo '<br />After Redirect';
+> >     }   
+> > }
+> > 
+> > This is the output when this URL is launched: http://helloworld/dispatch/index
+> > 
+> > Init 
+> > Init 
+> > Pre Dispatch 
+> > Before Forward
+> > After Forward
+> > Post Dispatch 
+> > Test View
+> > Pre Dispatch 
+> > 1.10.6
+> > Post Dispatch
+> > 
+> > The question is: why does the View show up *BEFORE* preDispatch()???
+A: (from Matthew) Calling _forward() simply sets hints in the request object that another request will need to be dispatched; it does not actually dispatch it. As such, it cannot actually bounce you out of execution, either -- the only way to do that is to call "return". Since you didn't call "return", the method continues executing, which is why you see "after forward" occur.
+
+For this reason, I usually recommend that you call "return" whenever you _forward() or redirect:
+
+    return $this->_forward('test');
+    return $this->_redirect('/');
+
+The latter may seem unimportant... until you run your unit test suite, and get a view rendered. ;-) (Normally, redirection will call exit() on completion; we override that behavior in ControllerTestCase so that we can get a response and perform assertions on it.)
+
+Q: Based on the output mentioned in the question above, why does the View show up *BEFORE* preDispatch()?
+A: (from Matthew) Most likely it has to do with the order in which output buffering calls are made (notice that you have "Init" twice before
+anything else -- also a symptom). 
+
+Q: I noticed the DB config only "supports" one DB. How about multiple DBs?
+A: See discussion: http://framework.zend.com/manual/en/zend.application.available-resources.html
+A: http://framework.zend.com/manual/en/zend.application.available-resources.html#zend.application.available-resources.multidb
+ Below is an example INI configuration that can be used to initialize two Db Connections.
+      [production]
+      resources.multidb.db1.adapter = "pdo_mysql"
+      resources.multidb.db1.host = "localhost"
+      resources.multidb.db1.username = "webuser"
+      resources.multidb.db1.password = "XXXX"
+      resources.multidb.db1.dbname = "db1"
+
+      resources.multidb.db2.adapter = "pdo_pgsql"
+      resources.multidb.db2.host = "example.com"
+      resources.multidb.db2.username = "dba"
+      resources.multidb.db2.password = "notthatpublic"
+      resources.multidb.db2.dbname = "db2"
+      resources.multidb.db2.default = true
+
+Q: How can I use an XML config file in a standard ZF app?
+A: Modify index.php as follows:
+// Read config data
+require_once 'Zend/Config.php';
+require_once 'Zend/Config/Xml.php';
+$config = new Zend_Config_Xml(APPLICATION_PATH . 
+                              '/configs/application.xml', 
+                              APPLICATION_ENV);
+
+/** Zend_Application */
+require_once 'Zend/Application.php';
+
+// Create application, bootstrap, and run
+$application = new Zend_Application(
+    APPLICATION_ENV,
+    // Use a Zend_Config object 
+    $config
+//    APPLICATION_PATH . '/configs/application.ini'
+);
+
+Q: On a find() what if you've got a compound key?
+A: Specify the number of params in find() which equal the columns of the key
+   (see zend_db_table_find_compound_key.php)
+
+Q: Can you program app namespace in application.ini?
+A: As of ZF 1.10.x --> 
+appnamespace = "Application"
+
+Q: How do you specify the error message?
+A: $element->addErrorMessage()
+A: $element->setErrorMessage() (same as add except that this clears the messages stack first)
+A: $form->setDefaultTranslator(Zend_Translate $object)
+
+Q: How do you clear form params after success?
+A: $form->reset();
+
+Q: Can I use getResource($db) to get an instance of the database connection?
+A: Yes. From a controller, proceed as follows
+	$bootstrap = $this->getInvokeArg('bootstrap');
+	$db = $bootstrap->getPluginResource('db'); // instance of Zend_Db_Adapter
+A: See also: http://weierophinney.net/matthew/archives/235-A-Simple-Resource-Injector-for-ZF-Action-Controllers.html
+
+Q: What are the Zend_Auth_Result failure message codes?
+A: Predefined constants: FAILURE, FAILURE_CREDENTIAL_INVALID, FAILURE_IDENTITY_AMBIGUOUS, FAILURE_IDENTITY_NOT_FOUND, FAILURE_UNCATEGORIZED, SUCCESS
+
+Q: Why doesn't the view helper created in ZS extend Zend_View_Helper_Abstract?
+A: ???
+
+Q: MySql query optimizer.  Does this provide enough to bypass the profiler?
+A: Not sure what this question means, but here is some reading on MySQL query tools
+ vs. Zend_Db_Profiler   
+http://www.xaprb.com/blog/2006/10/12/how-to-profile-a-query-in-mysql/
+http://stackoverflow.com/questions/1275375/zend-framework-and-mysql-very-slow
+http://www.techfounder.net/2008/10/12/profiling-queries-with-zend_db-and-optimizing-them-by-hand/
+Also: read the section "Overriding Table Setup Methods" in 
+http://framework.zend.com/manual/en/zend.db.table.html
+The more you define "manually" = less work by ZF = better performance
+
+Q: Do you have more info on table data gateway model?
+A: http://geekswithblogs.net/flanakin/archive/2004/03/08/2633.aspx   
+   http://www.longacre-scm.com/blog/index.php/2006/02/design-pattern-table-data-gateway
+   http://css.dzone.com/books/practical-php-patterns-table
+
+Q: Can action helper paths be programmed in application.ini?
+A: Not as a resource. (???)
+
+Q: How do you program db log resources?
+A: You can configure some of the parameters, but will have a problem programming the db instance
+resources.log.db.writerName = 'Db'
+resources.log.db.writerParam.table = 'log_table'
+resources.log.db.writerParam.columnMap.priority = 'lvl'
+resources.log.db.writerParam.columnMap.message = 'msg'
+resources.log.db.writerParam.db = ???
+http://stackoverflow.com/questions/2485004/zend-framework-zend-log-via-application-ini-insert-on-a-non-object-error
+
+Q: re: session locks: Will trying to change a locked session throw an exception, or just silently ignore the change?
+A: throws an exception
+
+Q: re: session expiration: can you set both seconds and hops for the same namespace?
+A: Yes.  Whatever is triggered the soonest is what expires the session.
+
+Q: What is the default escape method?
+A: For Zend_View it's htmlspecialchars().  Use $view->setEscape() to change.
+
+Q: Is there a doc somewhere that explains directory naming conventions?  ie. 'Models/DbTable'
+A: http://framework.zend.com/manual/en/coding-standard.naming-conventions.html
+A: http://zendframework.com/wiki/display/ZFDEV/ZF+Coding+Standards+%28RC%29
+
+Q: In slide 310, what does the "tip" explain?
+A: REF: http://wiki.ekini.net/main/Zend_view#Writing_Custom_Helpers
+This "tip" is referring to setView().  What setView() does is to make the View Object available to the view helper.  The tip refers to the 
+fact that if you want this object available in subsequent calls to  the helper, you have to store it yourself if you want it available 
+later on.
+
+Q: What kind of performance hit would multiple RSS subscribers make on a server?
+A: ???
+
+Q: What is a "pseudo decorator pattern" (slide #317)
+A: ???
+
+Q: Why is init() called again when doing _forward?
+A: Because each _forward causes a new instance of the controller to be generated
+
+Q: How do transactions fit into Zend_DB?
+A: Transactions are handled by the adapter using the methods _beginTransaction(), _commit() and _rollback()
+   You can access these methods directly off an instance of the adapter.  If you don't have this, then
+   use ->getAdapter() first, and then one of the three
+
+Q: What is the difference between join() and joinLeft() in a Zend_Db_Select?
+A: join() is the same as joinInner().  The result only includes rows which satisfy the criteria.
+   joinLeft() results in ALL rows of the "left" table, even if no rows in the right meet the critera.
+   There is also joinRight(), joinFull(), joinCross() and joinNatural()
+   see: http://framework.zend.com/manual/1.10/en/zend.db.select.html
+
+Q: Is there a way to force a different view script?
+A: $view->render('viewscript-filename');
+
+Q: How to add comments to XML file
+A: <!-- comment -->
+
+Q: How does zend guard work with the MVC-model? Is there any benefit?
+A: Zend Guard really has nothing to do with the MVC model - Zend Guard just encrypts code.
+
+Q: Is there a way to create protected + signed pdf-files using zend-framework?
+A: PDF Question:
+REF: http://www.web-development-blog.com/archives/create-pdf-documents-online-with-tcpdf/
+Additionally TCPDF includes tons of killer features that are missing  in mPDF (i.e: bidirectional-algorithm for RTL languages, digital signature, document encryption, pre-press utilities, native SVG support,  and much more).  AFAIK, the latest TCPDF release is able to convert HTML much better  than mPDF (at least for my purposes) and includes support for CSS files.
+NOTE: same limitations apply to Zend_Pdf (except for compression, which is supported)
+
+Q: How do you create a mixed case controller?
+A: zf create controller testXyz
+   1. creates TestXyzController.php
+   2. creates directory views/scripts/test-xyz
+   3. to invoke: http://some.url/test-xyz/index
+A: Was fixed in ZF 1.10. 
+   See: http://framework.zend.com/issues/browse/ZF-8394?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+Example:
+ted@ted:/var/www/HelloWorld$ zf create controller takeOne
+Note: The canonical controller name that is used with other providers is "TakeOne"; not "takeOne" as supplied
+Creating a controller at /var/www/HelloWorld/application/controllers/TakeOneController.php
+Creating an index action method in controller TakeOne
+Creating a view script for the index action method at /var/www/HelloWorld/application/views/scripts/take-one/index.phtml
+Creating a controller test file at /var/www/HelloWorld/tests/application/controllers/TakeOneControllerTest.php
+Updating project profile '/var/www/HelloWorld/.zfproject.xml'
+
+Q: What happens if system is unable to locate auth source? exception?
+A: Error code 0 (FAILURE) is returned.  An exception is not generated.
+
+Q: When does ACL return 0 (FAILURE)?
+A: Occurs if "An unexpected failure occurred" -- see zend_auth_ldap_fail.php
+
+Q: Slide 275 -- what is the code used to add additional fields to identity?
+A: In addition to the availability of the getIdentity() method upon the authentication result object, Zend_Auth_Adapter_DbTable also supports retrieving the table row upon authentication success:
+      // Print the identity
+      echo $result->getIdentity() . "\n\n";
+      // Retrieve the result row
+      $identity = $authAdapter->getResultRowObject();
+      // And then the rest of the code on the slide follows
+
+Q: Can I override existing Zend_Log priority levels?
+A: Existing priorities cannot be overwritten (see zend_log_filter_instance.php)
+
+Q: Is there a diagram you know of that shows detailedd ZF MVC app life cycle?
+A: http://devzone.zend.com/article/11978
+
+Q: Zend_Validate_x_y? x_y?
+A: See FormDemo.  Example:
+$className->addFilter('Word_SeparatorToSeparator', array('_', '/'))
+	  ->setLabel('Enter a Class Name')
+	  ->setAttrib('size', 60)
+	  ->setDescription('Example: Zend_Feed_Pubsubhubbub_Model_ModelAbstract');
+
+Q: Examples using ZF and phar
+
+Q: How can you group clauses using Zend_Db_Select?
+Zend_Db_Select automatically puts parentheses around each expression you specify using the where() or orWhere() methods. This helps to ensure that Boolean operator precedence does not cause unexpected results.
+
+Example #20 Example of parenthesizing Boolean expressions
+      // Build this query:
+      //   SELECT product_id, product_name, price
+      //   FROM "products"
+      //   WHERE (price < 100.00 OR price > 500.00)
+      //     AND (product_name = 'Apple')
+      $minimumPrice = 100;
+      $maximumPrice = 500;
+      $prod = 'Apple';
+      $select = $db->select()
+                   ->from('products',
+                          array('product_id', 'product_name', 'price'))
+                   ->where("price < $minimumPrice OR price > $maximumPrice")
+                   ->where('product_name = ?', $prod);
+
+In the example above, the results would be quite different without the parentheses, because AND has higher precedence than OR. Zend_Db_Select applies the parentheses so the effect is that each expression in successive calls to the where() bind more tightly than the AND that combines the expressions. 
+REF: http://framework.zend.com/manual/en/zend.db.select.html
+
+Q: How can you do sub-selects using Zend_Db_Select?
+A:
+/* Example SQL:
+SELECT `akt`.`n` 
+FROM (   
+    SELECT `name` AS `n` 
+    FROM `aktualne` 
+    ) AS `akt` 
+WHERE `akt`.`n` = '2008' 
+$subSelect = $db->select()->from('aktualne', array('n' => 'name'));
+*/
+// Example Zend_Db_Select:
+$select = $db->select()
+                        ->from( array('akt' => $subSelect), array('n'))
+                        ->where('akt.n = ?', 2008);
+
+REF: http://zend-framework-community.634137.n4.nabble.com/Support-Zend-Db-Select-sub-selects-td674928.html
+
+More complex example using both questions:
+REF: http://www.zfforums.com/zend-framework-components-13/databases-20/sub-queries-2177.html
+
+Q: What are the default classname - file associations (i.e. Plugin = plugins, Model = models, etc.)?
+A: Look at the method initDefaultResourceTypes() in this file:
+   Zend/Application/Module/Autoloader.php
+
+Q: How do you configure ZS to use Zend_Tool?
+A: In Studio select Window->Preferences - PHP - PHP Executables
+   Select "Zend Server" (at the bottom of the list)
+   Make this the new default
+
+Q: Can disabled short tags in php.ini be overridden in application.ini?
+A: Yes.  See http://www.php.net/manual/en/ini.core.php#ini.short-open-tag
+   In the application.ini file: 
+   phpSettings.short_open_tag = 1
+
+Q: Can view scripts end in ".php" and ".phtml" both?
+A: Default is *.phtml.  This can be overridden by ... ???
+   Discussion on phtml: http://akrabat.com/php/questions-regarding-the-latest-tutorial-130/
+   To change: modify the "viewSuffix " property of Zend_Controller_Action.
+   I.e., if you want to use "php", from the controller, execute the following:
+   $this->viewSuffix = "php";
+
+Q: Is there a default escape for forms and views? How to set?
+A: To escape output from the view you need to use $this->escape().  There is no default because the view might not be HTML.
+   Zend_Form, on the other hand, uses htmlspecialchars() by default.
+   On an element level, you can set do $element->setAttrib('escape', FALSE).  Note that slashes might be added at the PHP level.
+   Check that the php.ini parameter "magic_quotes_gpc" is set off.
+   REF: http://stackoverflow.com/questions/3621508/zend-form-setattribescape-false-not-working-help
+   You can retrieve raw post values from $this->getRequest()->getParam('field')
+   You can get unfiltered form values as $form->getUnfilteredValue('field')
+   Also, the value echoed back in the "value=" attribute is filtered by Zend_View.  
+   This can be overridden using $this->view->setEscape()
+   (defaults to htmlspecialchars())
+   SEE: formdemo.zip on codearchive
+
+Q: Why do we need getBootStrap() in this example, but bootstrap() in other? Also what is the exact function of run()?
+A: The purpose of bootstrap() is to *run* the bootstrap process.
+   getBootStrap() retrieves an instance of the bootstrap process (from which we can bootstrap individual items or obtain resources)
+   run() launches the Front Controller
+   REF: http://framework.zend.com/manual/en/zend.application.theory-of-operation.html
+
+Q: How does ZF deal with multiple words in class name?
+A: URL should use a "-" and lower case letter ("TestOne" => "test-one")
+   Same for view script directory.
+
+Q: How do you create a mixed case controller?
+A: zf create controller testXyz
+   - or -
+   zf create controller TestXyz
+   1. creates TestXyzController.php
+   2. creates directory views/scripts/test-xyz
+   3. to invoke: http://some.url/test-xyz/index
+A: Was fixed in ZF 1.10. 
+   See: http://framework.zend.com/issues/browse/ZF-8394?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+Example:
+ted@ted:/var/www/HelloWorld$ zf create controller takeOne
+Note: The canonical controller name that is used with other providers is "TakeOne"; not "takeOne" as supplied
+Creating a controller at /var/www/HelloWorld/application/controllers/TakeOneController.php
+Creating an index action method in controller TakeOne
+Creating a view script for the index action method at /var/www/HelloWorld/application/views/scripts/take-one/index.phtml
+Creating a controller test file at /var/www/HelloWorld/tests/application/controllers/TakeOneControllerTest.php
+Updating project profile '/var/www/HelloWorld/.zfproject.xml'
+
+Q: I've almost always used Pear DB. Pear to PDO is apples and oranges?
+A: Pear DB has been deprecated in favor of MDB2 (http://pear.php.net/package/MDB2)
+   Looks like a cross between PDO and Zend_Db.  Could not see equivalent of Zend_Db_Table.
+
+Q: Where do I find the API docs for describeTable()?
+A: http://framework.zend.com/apidoc/1.11/Zend_Db_Adapter_Abstract.html#Zend_Db_Adapter_Abstract::describeTable()
+
+Q: Why is auto quoting not enabled for insert and update statements the way it's enabled for select?
+A: Partial answer from Bill Karwin (ZF Zend_Db team)
+   http://stackoverflow.com/questions/975009/avoiding-mysql-injections-with-the-zend-db-class/985316#985316
+
+Q: What is the short cut for $this->getRequest()->getParams()
+A: _getParams()
+
+Q: Why do controllers not need a classname prefix?
+A: No namespacing is required for controllers in the default module.
+   See: http://framework.zend.com/manual/en/zend.controller.modular.html
+   Also note in application.ini:
+   resources.frontController.controllerDirectory = APPLICATION_PATH "/controllers"
+
+Q: Can I set up multiple namespaces in the bootstrap?
+A: $autoloader = Zend_Loader_Autoloader::getInstance();
+   $autoloader->registerNamespace('My_First_');
+   $autoloader->registerNamespace('My_Second_');
+   $autoloader->setFallbackAutoloader(true);
+	-- or --
+   In application.ini (ZF 1.10+):
+   autoloadernamespaces.0 = "Zend_"
+   autoloadernamespaces.1 = "ZendX_"
+   autoloadernamespaces.2 = "My_First_"
+   autoloadernamespaces.3 = "My_Second_"
+
+Q: How do I disable the view renderer and layout?
+A: $this->_helper->viewRenderer->setNoRender();
+   $this->_helper->layout()->disableLayout();
+
+Q: Doc ref for plugins -- Kevin's article
+A: http://devzone.zend.com/article/11978 (MVC Lifecycle - Plugins - Kevin Schroeder)
+
+Q: So the current zend_form's validator is all happening on the server-side, so all the javascript stuff is just helpful UI for the user, but in the end, it doesn't help you if you can't validate dates across fields on the server
+A: Have a look at an implementation of "decoupling" validation from forms:
+   REF: http://lebensold.net/development/decoupled-validation-with-zend_form-zend_validate-and-zend-mvc
+   REF: http://www.zendcasts.com/encapsulating-business-rules-with-zend_validate/2010/03/
+   REF: http://www.zend.com/topics/2008-03-05-Zend-Form.pdf
+
+Q: 'zf create model guestbook' did not work on the command line.
+A: Here are some examples from the advanced class:
+# Students, PlEASE NOTE: you should edit the application.ini file and change
+# the db path name to read: APPLICATION_PATH "/../data/db/wikiapp.sqlite"
+zf configure dbadapter "adapter=Pdo_Sqlite&dbname=${TARGET_BASE_DIR}/${1}/data/db/${DBNAME}"
+# Note that you'll get all DbTable models created in the wiki module this way,
+# which may not be what you want (see application/models/DbTable/User.php and
+# application/modules/models/DbTable/User.php in wikiapp.work, for example)
+zf create dbtable.from-database
+# Create Application Domain Models
+zf create model User
+zf create model CurrentUser
+
+Q: Why can't you use Zend_Tool from inside Zend Studio?
+A: You can -- just make sure you "cd" to the correct project first and use the correct syntax.
+
+Q: Web reference for Zend_Tool providers?
+A: http://weierophinney.net/matthew/archives/242-Creating-Zend_Tool-Providers.html
+
+Q: Can view scripts end in ".php" and ".phtml" both?
+A: Default is *.phtml.  This can be overridden by ... ???
+   Discussion on phtml: http://akrabat.com/php/questions-regarding-the-latest-tutorial-130/
+   To change: modify the "viewSuffix " property of Zend_Controller_Action.
+   I.e., if you want to use "php", from the controller, execute the following:
+   $this->viewSuffix = "php";
+
+Q: RE: table relationships, is it loading it in memory, or querying the db?
+A: Ran profiler on relationships; does background query.
+   See: zend_db_table_many_to_many.php on the code archive (with profiler enabled)
+
+Q: Is setIgnore the same as not setting validators?
+A: Every Zend_Form_Element instance has a method setIgnore(). Also you can pass a flag 'ignore' 
+   equal to True in the $options array parameter in the constructor, respecting the framework 
+   convention, to obtain the same result.
+   The purpose of this option is to exclude the value assumed by this input from the result 
+   returned by getValues(), even if you pass to isValid() the entire POST request (which contains 
+   a value for this specific element since it was present on the client side and filled for other 
+   purposes). This option comes handy when using Zend_Form_Element_Captcha or Zend_Form_Element_Submit.
+   See: http://giorgiosironi.blogspot.com/2009/10/advanced-zendform-usage.html
+A: See also: http://weierophinney.net/matthew/archives/200-Using-Zend_Form-in-Your-Models.html
+Q: So the default is true?
+A: No: the default is FALSE.
+
+Q: Can we use the "*" tag anywhere when using this format to set filter/validators?
+A: There is a form level method for filters but not for validators.  Unfortunately this is a *set* method, however, which
+   means it overrides existing element filters.
+   See: http://stackoverflow.com/questions/4670806/zend-form-and-setelementfilters-with-zend-filter-stringtrim-does-not-trim
+   Also see zend_form_set_element_filters.php on the code archive
+A: You could, alternatively, use Zend_Filter_Input
+
+Q: Can you use Zend_Config_Writer to convert from ini to xml?
+A: Yes.  See zend_config_writer_xml.php on code archive
+
+Q: RE: Zend_Db_Table: does that make one connection per request, or does the connect persist?
+A: First read these:
+   http://meta.wikimedia.org/wiki/Why_persistent_connections_are_bad
+   http://www.mysqlperformanceblog.com/2006/11/12/are-php-persistent-connections-evil/
+A: By default one connection per request, but persistent connections are supported.
+   See http://framework.zend.com/manual/1.11/en/zend.db.adapter.html
+   Please read the note about the evils of persistent connections:
+	Please note that using persistent connections can cause an excess of idle connections 
+	on the RDBMS server, which causes more problems than any performance gain you might 
+	achieve by reducing the overhead of making connections. 
+   Example #33 Using the Persitence Flag with the Oracle Adapter
+      $db = Zend_Db::factory('Oracle', array(
+          'host'       => '127.0.0.1',
+          'username'   => 'webuser',
+          'password'   => 'xxxxxxxx',
+          'dbname'     => 'test',
+          'persistent' => true
+      ));
+
+Q: What are some pros and cons of using Zend_Db_Table?
+A: The describeTable() method returns an associative array of metadata about a table. 
+   Specify the name of the table as a string in the first argument to this method. 
+   The second argument is optional, and names the schema in which the table exists. 
+   PRO: saves you having to hard-code info on the table
+   CON: this method is called once per request cycle if you're using Zend_Db_Table
+
+Q: What is the syntax for retrieving $_GET and $_POST values?
+A: $this->getRequest()->getQuery('param') = $_GET
+   $this->getRequest()->getPost('param') = $_POST
+   See docs for Zend_Controller_Request_Http
+
+Q: Why does the autoloader map a class name of "*Model*" to the "models" directory?
+A: Zend_Application_Module_Autoloader defines "resource types" which define classname to filesystem mappings.
+   i.e. *Model_* => models    *
+
+Q: RE: Zend_Auth_Adapter_DbTable constructor: why does it need the ? for the 4th parameter?
+A: The "?" is a placeholder for the credential.  Example on the slide won't work.  More common examples:
+   $adapter = new Zend_Auth_Adapter_DbTable($db, 'users', 'username', 'password', 'MD5(?)');
+   -- or --
+   $adapter = new Zend_Auth_Adapter_DbTable($db, 'users', 'username', 'password', 
+					    "MD5(CONCAT('" . Zend_Registry::get('staticSalt') . "', ?, password_salt))");
+   See: http://framework.zend.com/manual/en/zend.auth.adapter.dbtable.html
+
+Q: Also, is there something like insert-from-select?
+A: Not that I am aware.
+
+Q: Is there a 2nd param to registerNamespace() in order to specify a path?
+A: No.  Anything you register must be either under library, or in the include_path.
+   See also this article about autoloading: http://devzone.zend.com/article/4525
+A: Another technique is to program the autoloader in the bootstrap as follows:
+    //See guestbook/application/Bootstrap.php
+    protected function _initAutoload()
+    {
+        $autoloader = new Zend_Application_Module_Autoloader(array(
+            'namespace' => 'Default',
+            'basePath'  => dirname(__FILE__),
+        ));
+        return $autoloader;
+    }
+
+Q: PDO Mysql connect error !!!!!!!!! I can not change socket path in mysql config.. can you please give me alternate solution of below problem... ? 
+A: PROBLEM:
+Fatal error: 
+Uncaught exception 'PDOException' with message 'SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/tmp/mysql.sock' (13)' in 
+/var/www/XXXXX/library/Zend/Db/Adapter/Pdo/Abstract.php:129 Stack trace: #0 
+/var/www/XXXXX/library/Zend/Db/Adapter/Pdo/Abstract.php(129):PDO->__construct('mysql:host=loca...', 'XXXXX', 'XXXXX', Array) 
+#1 /var/www/XXXXX/library/Zend/Db/Adapter/Pdo/Mysql.php(109):Zend_Db_Adapter_Pdo_Abstract->_connect() 
+#2 /var/www/XXXXX/library/Zend/Db/Adapter/Abstract.php(459): Zend_Db_Adapter_Pdo_Mysql->_connect() 
+#3 /var/www/XXXXX/library/Zend/Db/Adapter/Pdo/Abstract.php(238): Zend_Db_Adapter_Abstract->query('DESCRIBE `tbl_s...', Array) 
+#4 /var/www/XXXXX/library/Zend/Db/Adapter/Pdo/Mysql.php(169): Zend_Db_Adapter_Pdo_Abstract->query('DESCRIBE `tbl_s...') 
+#5 /var/www/XXXXX/library/Zend/Db/Table/Abstract.php(835): Zend_Db_Adapter_Pdo_Mysql->describeTable('tbl_setting', NULL) 
+#6 /var/www/XXXX/library/Zend/Db/Table/Abstract.php(857): Zend_Db_Table_Ab in /var/www/XXXXX/library/Zend/Controller/Plugin/Broker.php on line 336 
+
+A: Try adding this line to your application.ini file: 
+resources.db.params.unix_socket = "/var/run/mysqld/mysqld.sock"
+
+Q: re: Zend_Config: $this->getInvokeArg('bootstrap')->getOption('username.first'); Or, how do I access the heirarchical data
+A: See:http://blog.vandenbos.org/2009/07/07/zend-framework-module-config/
+   $this->getInvokeArg('bootstrap')
+ 	->getResource('modules')
+        ->offsetGet('modulenamehere')
+	->getOptions();
+
+Q: Does Zend_Db_Select support WITH()?
+A: ZF 1.11.11 does not.  You have a couple of options, however:
+   (1) rewrite the "WITH ... " statement using nested SELECT statements
+       see: REF: http://stackoverflow.com/questions/2843168/how-to-create-zend-db-select-with-nested-queries
+   (2) bypass Zend_Db_Select and insert SQL directly into $db->query($sql) or $db->fetchAll($sql)
+
+Q: Did you find a way with zend to read the logs "Zend_Log_Reader" to create a log viewer page?
+A: There is no class Zend_Log_Reader.  Zend_Log is designed to write to log files not to read them.
+   In order to read log files you would access the as appropriate to the writer.  If a stream writer,
+   you could use the fopen() command.  If writing to a database, you could use Zend_Db_Table.
+   In order to control pagination use Zend_Paginator.
+
+Q: How do you set up a row save using NOW()? It supports NOW, no? http://www.sqlite.org/lang_datefunc.html says NOW is supported by SQLite I want to add that to my insert. i.e. Insert [...] VALUES ('foo', NOW, 'bar');
+A: You will notice from the above documentation page (i.e. lang_datefunc.html) that NOW
+   is actually keyword which serves an argument to the SQLite date/time functions.  
+   The functions mentioned in the documentation include date(), time(), datetime(), and julianday().
+   All of the examples given are using a SELECT statement (but not INSERT!).  
+   Zend_Db_Select supports SQL functions in the 2nd argument in the $select->from(xxx, yyy) method.  
+   Here is an example using SQLite 'now':
+   $select = $db->select()->from('xyz', array('now' => "date('now')");
+   If you echo this statement you will see: SELECT date('now') AS `now` FROM `xyz`
+
+Q: Does Zend_Db_Select support nested queries?
+A: Yes.  Use Zend_Db_Expr.  
+   REF: http://stackoverflow.com/questions/2843168/how-to-create-zend-db-select-with-nested-queries
+
+Q: Where is the MyWiki_ namespace defined?
+A: pluginPaths.MyWiki_Resource in app.ini
+
+Q: How do you set the timezone in the application.ini? I ended up setting a config option. 
+   Then created an _init in the bootstrap and used Zend_Date::setTimeZone($this->getOption('datetime.timezone'));  
+   Is there a better way to do this?
+A: You can add this to your application.ini file:
+   ;; using whatever region/city is appropriate:
+   phpSettings.date.timezone = "Europe/London"
+
+Q: We tried using the zend framework Zend_Db_Adapter_Oracle 
+   but i dont have the oci extension in our php extensions folder any idea where i can get that?
+A: The oci8 PHP database extension is included with the primary PHP download obtainable from php.net
+   REF: http://php.net/downloads.php
+   To enable the OCI8 extension, configure PHP with the option --with-oci8
+   REF: http://uk.php.net/manual/en/oci8.installation.php
+
+Q: Is the lock state, a state in the zend framework or an intristic part of the session?
+A: Session namespace locks and expiration features are not part of PHP sessions, rather are
+   implemented in Zend_Session_Namespace (see source code).  When creating a new
+   Zend_Session_Namespace object, each namespace key is implemented as a singleton.
+
+Q: Is the lock state like having an expiry against a key in redis for example?
+   ie if I was sharing the session across servers (LB')d would the lock also be shared?
+A: No: locks are implemented strictly inside Zend_Session_Namespace.
+   REF: sessiondemo
+
+Q: When you access a locked session is an exception thrown?
+A: Yes.  See source code for Zend_Session_Namespace
+
+Q: Does someone fixed the mouse scroller issue with VMWare?
+A: sudo gedit /etc/X11/xorg.confScroll down (its not far, perhaps 20 - 30 lines) till you see a block that looks like this:Section "InputDevice" Identifier "Configured Mouse" Driver "vmmouse" [.. blah blah blah ..] EndSectionReplace that whole section with this:Section "InputDevice" Identifier "Configured Mouse" Driver "vmmouse" Option "CorePointer" Option "Device" "/dev/input/mice" Option "Protocol" "ImPS/2" Option "Buttons" "5" Option "ZAxisMapping" "4 5" EndSectionSave the file, then close all your apps and hit Ctrl+Alt+Backspace. X restarts within a few seconds, and youre back up and running. Scrolling should now be possible!
+
+Q: When the error controller kicks in, does it return a 404?
+A: Depends on the error message.  It will return a number of different codes, include 404.
+   See ErrorController.php
+
+Q: How do I access the view object from Bootstrap.php?
+A: Add this line to application.ini:
+   resources.view[] = ""
+   Then, in Bootstrap.php:
+   protected function _initView()
+   {
+        $this->bootstrap('view');	// only do this ONCE in Bootstrap.php!!!
+        $view = $this->getResource('view');
+	$view->someVariable = 'Some Value';
+	$view->addHelperPath('path/to/helpers', 'Custom_Helper_Prefix');
+   }
+
+Q: Can I set up multiple namespaces in the bootstrap?
+A: 
+   protected function _initAutoload()
+   {
+   $autoloader = Zend_Loader_Autoloader::getInstance();
+   $autoloader->registerNamespace('My_First_');
+   $autoloader->registerNamespace('My_Second_');
+   $autoloader->setFallbackAutoloader(true);
+   return $autoloader;
+   }
+	-- or --
+   In application.ini (ZF 1.10+):
+   autoloadernamespaces.0 = "Zend_"
+   autoloadernamespaces.1 = "ZendX_"
+   autoloadernamespaces.2 = "My_First_"
+   autoloadernamespaces.3 = "My_Second_"
+
+Q: How to get app.ini params from front controller?
+A: $options = $this->getFrontController()->getParam('bootstrap')->getOptions();
+
+Q: What is the syntax for retrieving $_GET and $_POST values?
+A: $this->getRequest()->getQuery('param') = $_GET
+   $this->getRequest()->getPost('param') = $_POST
+   See docs for Zend_Controller_Request_Http
+
+Q: Why does the autoloader map a class name of "*Model*" to the "models" directory?
+A: Zend_Application_Module_Autoloader defines "resource types" which define classname to filesystem mappings.
+   i.e. *Model_* => models    *
+
+Q: Why am I getting an "undefined index 'id'" when writing data in the forms lab?
+A: Have to remove the reference to $_cols in the guestbook table model class!
+
+Q: Matthew's article on re-using bootstrap resources
+A: Bootstrap Resource Plugins: http://mwop.net/blog/231-Creating-Re-Usable-Zend_Application-Resource-Plugins.html
+
+Q: Example of configuring router from Bootstrap.php
+A: See routedemo.zip on code archive
+	
+Q: Can you reset hops or seconds in Zend_Session_Namespace and still retain session data?
+A: Yes, but you need to re-issue $sessionNamespace->setExpirationSeconds(xxx) *before* current namespace expires.
+
+Q: Is there a good way to create nested select statements? how so? could i join with a nexted select?
+A: See http://stackoverflow.com/questions/1340564/writing-a-subquery-using-zend-db
+A: See last answer in: http://stackoverflow.com/questions/1718888/zend-db-table-subquery
+
+Q: Can the value for the table be another nested select oobject?
+A: No: the $select->from() clause requires the 1st param to be either a string (or a Zend_Db_Expr object, which implements _toString())
+   which specifies a table name, or an array, where the key = the alias, and the value = the table name
+
+Q: How complicated can the wheres get as far as combining ands and ors e.g. WHERE ((x or y) and (z or b))?
+A: http://stackoverflow.com/questions/2795344/multiple-nested-select-where-with-zend-db-select
+A: http://stackoverflow.com/questions/1179279/grouping-where-clauses-with-zend-db-table-abstract
+
+Q: Can you use Zend_Db_Table relationships to effect a cascading delete?
+A: Yes.  See: http://framework.zend.com/manual/1.12/en/zend.db.table.relationships.html#zend.db.table.relationships.cascading
+
+Q: RE: zend_log_writer + zend_log_formatter_xml, will XML append to root node?
+A: Each entry is a self-contained XML file which includes the root node.
+   You can override the root node.
+
+

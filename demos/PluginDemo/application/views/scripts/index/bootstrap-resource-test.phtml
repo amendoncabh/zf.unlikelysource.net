@@ -1,0 +1,38 @@
+<h2>Bootstrap Resource Test</h2>
+<p>
+<?php 
+if (isset($this->viewplus)) {
+	echo 'VARIABLE WAS SET SUCCESSFULLY FROM BOOTSTRAP RESOURCE PLUGIN: ';
+	echo $this->viewplus;
+} else {
+	echo 'VARIABLE FROM BOOTSTRAP RESOURCE NOT FOUND';
+}
+?>
+<br />
+<?php
+if (isset($this->viewplus_from_controller)) {
+	echo 'VARIABLE WAS SET SUCCESSFULLY FROM THE CONTROLLER: ';
+	echo $this->viewplus_from_controller;
+} else {
+	echo 'VARIABLE FROM CONTROLLER NOT FOUND';
+}
+?>
+<br />
+<?php
+if (isset($this->viewbase)) {
+	echo 'VARIABLE WAS SET SUCCESSFULLY FROM THE BOOTSTRAP: ';
+	echo $this->viewbase;
+} else {
+	echo 'VARIABLE FROM BOOTSTRAP NOT FOUND';
+}
+?>
+<br />
+<?php
+if (isset($this->viewbase_from_controller)) {
+	echo 'VARIABLE WAS SET SUCCESSFULLY FROM THE CONTROLLER: ';
+	echo $this->viewbase_from_controller;
+} else {
+	echo 'VARIABLE FROM CONTROLLER NOT FOUND';
+}
+?>
+</p>

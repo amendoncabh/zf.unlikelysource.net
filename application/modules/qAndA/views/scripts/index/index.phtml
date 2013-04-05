@@ -1,0 +1,11 @@
+<ul>
+<?php foreach ($this->paginator as $key) : ?>
+<li>
+<a href="/qAndA/index/answer/ques/<?php echo urlencode($key); ?>"><?php echo $key; ?></a>
+</li>    
+<?php endforeach; ?>
+</ul>
+<hr />
+<?php echo $this->paginator; ?>
+<br />
+TO DO: Add Search

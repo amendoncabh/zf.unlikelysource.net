@@ -1,0 +1,47 @@
+<?php 
+$options			= Zend_Registry::get('options');
+$locale 			= Zend_Registry::get('Zend_Locale');
+$session 			= new Zend_Session_Namespace('calendar');
+$year 				= ($session->year)  ? $session->year  : date('Y');
+$showDate['year'] 	= date('Y');
+$showDate['month']	= date('m');
+$showDate['day']	= date('d');
+?>
+<style>
+.calendar_month_class {
+	border: 1px;
+	margin: 5px;
+}
+.calendar_week_class {
+	
+}
+.calendar_day_class {
+	text-align: center;
+}
+.calendar_selected_day_class {
+	text-align: center;
+	color: blue;
+    font-weight: bold;
+}
+</style>
+<h3><a href="/calendar/view/year/y/<?php echo $year - 1; ?>">-</a>
+	&nbsp;&nbsp;
+	<?php echo $year; ?>
+	&nbsp;&nbsp;
+	<a href="/calendar/view/year/y/<?php echo $year + 1; ?>">+</a>
+</h3>
+<table cellspacing="2px" cellpadding="2px" class="calendar_year_class">
+<tr>
+<?php 
+for ($month = 1; $month <= 12; $month++) {
+	// break every xxx months (calendar.months_across)
+	if ($month % $options['calendar']['monthsAcross'] == 1) {
+		echo '</tr><tr>';
+	}
+	echo '<td>';
+	echo $this->smallMonth($month, $year, $showDate);
+	echo '</td>' . PHP_EOL;
+}
+?>
+</tr>
+</table>

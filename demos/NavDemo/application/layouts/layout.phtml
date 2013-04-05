@@ -1,0 +1,101 @@
+<?php $sess = new Zend_Session_Namespace("AuthDemo"); ?>
+<?php $name = (isset($sess->name)) ? $sess->name : 'guest';?>
+<?php echo $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<?php echo $this->headMeta(); ?>
+	<?php echo $this->headTitle(); ?>
+	<?php echo $this->headLink()->prependStylesheet($this->baseUrl().'/css/site.css'); ?>
+	<style>
+	.header {
+		color: white;
+	    font-weight: bold;
+		font-size: 10pt;
+	    background-color: gray;	
+	}
+	</style>
+</head>
+<body>
+<table width=100%>
+	<tr>
+		<td valign=top width=33%>
+			<table>
+			<tr><td><h2>Navigation / ACL Demo</h2></td></tr>
+			<?php if (isset($this->message)) : ?>
+			<tr><td><?php echo $this->message; ?></td></tr>
+			<?php endif; ?>
+			<tr><td>
+			<br /><?php echo date("Y-m-d h:i:s",time()); ?>
+			<br />Current Login: <?php echo $name; ?>
+			<br /><?php if ($this->loginForm) : ?>
+					<?php echo $this->loginForm; ?>
+				  <?php else : ?>
+					<a href="/">BACK</a>
+				  <?php endif; ?>
+			</td></tr>
+			<tr><td>
+			<p>
+			NOTE 1: the password is the same as the name<br />
+			NOTE 2: Ed is duplicated<br />
+			NOTE 3: "Order" parameter is set in aclmenu for red and green
+			NOTE 4: Guest can view Yellow
+			</p> 
+			</td></tr>
+			<tr>
+			<td>
+				<table>
+				<tr>
+				<td>
+					<table>
+					<tr>
+					<td>
+					<span class="header">&nbsp;ACL Menu Test&nbsp;</span>
+					</td>
+					<td>
+					<span class="header">&nbsp;ACL Plugin Test&nbsp;</span>
+					</td>
+					</tr>
+					<tr>
+					<td>
+					<?php echo $this->navigation()->menu()->render(Zend_Registry::get('aclMenu')); ?>
+					</td>
+					<td>
+					<?php echo $this->navigation()->menu()->render(Zend_Registry::get('aclPlugin')); ?>
+					</td>
+					</tr>
+					<tr>
+					<td>
+					The options you see depend on your role after login
+					</td>
+					<td>
+					All options are visible, but only accessible depending on your role
+					</td>
+					</tr>
+					</table>
+				</td>
+				</tr>
+				</table>
+			</td>
+			</tr>
+			</table>
+			<br />
+			<a href='/index/dump-menu'>Dump Menus</a>
+		</td>
+		<td width=33%>
+			<table border=1>
+				<tr><th class="ht">Role</th><th class="ht">Access</th></tr>
+				<tr><th class="gt">green</th><td>Green Files</td></tr>
+				<tr><th class="rt">red</th><td>Red Files</td></tr>
+				<tr><th class="pt">purple</th><td>Both Red and Green Files</td></tr>
+				<tr><th class="at">admin</th><td>All Rights</td></tr>
+				<?php echo $this->users($this->list); ?> 
+			</table>
+		</td>
+		<td width=33%>
+			<?php echo $this->layout()->content; ?>
+			<br /><?php echo @$this->msg; ?>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

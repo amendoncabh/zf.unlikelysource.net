@@ -1,0 +1,4 @@
+; create this file using the "htpasswd" utility
+; the hash portion is a hash of username:realm:plain-text-password
+; for more info see: http://framework.zend.com/manual/1.12/en/zend.auth.adapter.digest.html
+username:realm:hash

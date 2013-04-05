@@ -1,0 +1,58 @@
+<?php 
+$locale 			= Zend_Registry::get('Zend_Locale');
+$session 			= new Zend_Session_Namespace('calendar');
+$showDate['year'] 	= date('Y');
+$showDate['month']	= date('m');
+$showDate['day']	= date('d');
+$year				= (isset($session->year) && $session->year)   ? $session->year  : date('Y');
+$month				= (isset($session->month) && $session->month) ? $session->month : date('m');
+$prevMonth			= $month - 1;
+$prevYear			= $year;
+$nextMonth			= $month + 1;
+$nextYear			= $year;
+if ($prevMonth < 1) {
+	$prevMonth = 12;
+	$prevYear--;
+}
+if ($nextMonth > 12) {
+	$nextMonth = 1;
+	$nextYear++;
+}
+$monthName = ($locale->getTranslation($month, 'month'))
+		   ? $locale->getTranslation($month, 'month')
+		   : date('F');
+?>
+<style>
+.calendar_month_class {
+	border: 1px;
+	margin: 5px;
+}
+.calendar_day_class {
+	text-align: center;
+	border: thin solid blue;
+	width: 50px;
+	height: 50px;
+}
+.calendar_day_header_class {
+	text-align: center;
+	border: 0px;
+	width: 50px;
+	height: 10px;
+	color: #8888FF;
+}
+.calendar_selected_day_class {
+	text-align: center;
+	border: thin solid yellow;
+	width: 50px;
+	height: 50px;
+	color: blue;
+    font-weight: bold;
+}
+</style>
+<h3><a href="/calendar/view/month/m/<?php echo $prevMonth; ?>/y/<?php echo $prevYear; ?>">-</a>
+	&nbsp;&nbsp;
+	<?php echo  $monthName . '&nbsp;&nbsp;&nbsp;' . $year; ?>
+	&nbsp;&nbsp;
+	<a href="/calendar/view/month/m/<?php echo $nextMonth; ?>/y/<?php echo $nextYear; ?>">+</a>
+</h3>
+<?php echo $this->bigMonth($locale, $month, $year, $showDate); ?>

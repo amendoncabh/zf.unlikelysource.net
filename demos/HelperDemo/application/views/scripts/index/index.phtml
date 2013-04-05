@@ -1,0 +1,16 @@
+<html><body>
+<span style='font-family: helvetica, sans;'>
+<!--  today() header() and footer() are view helpers -->
+<!--  found at application/views/helpers -->
+<?php echo $this->today(); ?>
+<?php echo $this->header(); ?>
+<li><a href="/index/color">Color List</a></li>
+<p>
+<?php echo $this->msg; ?>
+</p>
+<p>
+<?php Zend_Debug::dump($this->options); ?>
+</p>
+<?php echo $this->footer(); ?>
+</span>
+</body></html>

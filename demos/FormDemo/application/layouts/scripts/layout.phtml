@@ -1,0 +1,88 @@
+<?php echo $this->doctype() ?> <!-- This Line will output the doctype we set inside the bootstrap file -->
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>  
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>Zend Framework Form Demo App</title>
+  <!--
+      The line below demonstrates usage of the headLink() view helper
+      @see http://framework.zend.com/manual/en/zend.view.helpers.html
+      -->
+  <?php echo $this->headLink()->appendStylesheet('/css/global.css') ?>
+  <!-- Dojo Toolkit Stuff -->
+  <?php echo $this->dojo(); ?>
+  <?php echo $this->dojo()->addStylesheetModule('dijit.themes.tundra') ?>
+  <style>
+  .nameClass {
+  	border:1px;
+  	width:440px;
+  	height:280px;
+  	background-color:#FFFF99;
+  	font: 12pt helvetica,sans;  	
+  }
+  .addressClass {
+  	border:1px;
+  	width:440px;
+  	height:515px;
+  	background-color:#FFFF33;
+  	font: 12pt helvetica,sans;  	
+  }
+  .remainderClass {
+  	border:1px;
+  	width:440px;
+  	height:200px;
+  	background-color:#FFFF66;
+  	font: 12pt helvetica,sans;  	
+  }
+  ul {
+  	width: 625px;
+  }
+  li {
+  	float: left;
+  	width: 125px;
+  	font: 12px helvetica sans;
+  }
+  </style>
+</head> 
+<body class="tundra">
+<!-- 
+    Layouts are a great place to put header and footer content that will be
+    needed on all pages that share the same layout.  To understand fully what
+    having layouts inside a MVC application mean, check out the Zend_Layout
+    section of the manual.
+    http://framework.zend.com/manual/en/zend.layout.html
+    -->
+<div id="header" style="background-color: #EEEEEE; height: 30px;">
+    <div id="header-logo" style="float: left">
+        <b>ZF Form Demo Application</b>&nbsp;&nbsp;&nbsp;
+    </div>
+    <div id="header-navigation" style="float: left">
+        <!-- To keep urls consistent with the applications router (right now we
+             are using the default router), we will employ the use of the url
+             view helper
+             http://framework.zend.com/manual/en/zend.view.helpers.html#zend.view.helpers.initial
+             -->
+        <?php echo $this->today(); ?>&nbsp;&nbsp;
+        <br />
+		<?php echo $this->navigation()->menu()->render(Zend_Registry::get('menu')); ?>
+    </div>
+</div>
+<table width=100%>
+<tr>
+<td width=150px valign=top>
+    Layout Variable
+    <hr />
+	<?php echo (isset($this->layoutVar)) ? $this->layoutVar : "BLANK"; ?>
+</td>
+<td width=10px>&nbsp;</td>
+<td>
+<!-- This next call will now include any content that was generated in the
+     dispatching of a controllers action (or series of actions).  -->
+<?php echo $this->layout()->content ?>
+
+<!-- if your application requires it, this would be a great place to put a
+     footer for all pages. -->
+</td>
+</tr>
+</table>
+</body>
+</html>
