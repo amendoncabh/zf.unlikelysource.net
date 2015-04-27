@@ -97,10 +97,3 @@ class Chat_RoomController extends Zend_Controller_Action
     }
 
 }
-
-
-
-
-
-
-

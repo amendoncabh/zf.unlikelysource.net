@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>View Render</title>
+<style>
+th {
+	font: bold 12pt Helvetica,sans;
+	color: gray;
+	text-align: right;
+}
+td {
+	font: 12pt Helvetica,sans;
+	color:purple;
+	text-align: left;
+}
+body {
+	background-color: <?php echo $this->bg; ?>;
+}
+</style>
+</head>
+<body>
+<table border=1 width=50% height=50% cellpadding=5>
+<tr bgcolor="#334455">
+    <th colspan=2>Assignment by Overloading         </th></tr>
+<tr><th>First </th><td><?php echo $this->a; ?>      </td></tr>
+<tr><th>Second</th><td><?php echo $this->b; ?>      </td></tr>
+<tr><th>Third </th><td><?php echo $this->c; ?>      </td></tr>
+<tr bgcolor="#465768">
+    <th colspan=2>Assignment by Array               </th></tr>
+<tr><th>First </th><td><?php echo $this->d; ?>      </td></tr>
+<tr><th>Second</th><td><?php echo $this->e; ?>      </td></tr>
+<tr><th>Third </th><td><?php echo $this->f; ?>      </td></tr>
+<tr bgcolor="#596A7B">
+    <th colspan=2>Assignment by Overloading / Object</th></tr>
+<tr><th>First </th><td><?php echo $this->obj->g; ?> </td></tr>
+<tr><th>Second</th><td><?php echo $this->obj->h; ?> </td></tr>
+<tr><th>Third </th><td><?php echo $this->obj->i; ?> </td></tr>
+</table>
+</body>
+</html>

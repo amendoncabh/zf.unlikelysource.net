@@ -10,7 +10,7 @@
  *
  * @uses viewHelper Zend_View_Helper
  */
-class Code_View_Helper_LeftMenu
+class Code_View_Helper_FileList
 {
     /**
      * @var Zend_View_Interface 
@@ -19,7 +19,7 @@ class Code_View_Helper_LeftMenu
     /**
      * 
      */
-    public function leftMenu ($menu)
+    public function fileList($list)
     {
         $output = '<ul';
         $output .= ($menu['class0']) ? ' class="' . $menu['class0'] . '"' : '';

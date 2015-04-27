@@ -23,6 +23,16 @@ class IndexController extends Zend_Controller_Action
         array_push($this->view->position_7, $form);
     }
 
+    public function codeAction()
+    {
+        $nico = (int) $this->getParam('nico');
+        if ($nico) {
+            $file = highlight_file(APPLICATION_PATH . '/../data/pdf/Zend_Pdf_Page_Nico_Edtinger.php', TRUE);
+        } else {
+            $file = '';
+        }
+        $this->view->nico = $file;
+    }
+
 
 }
-

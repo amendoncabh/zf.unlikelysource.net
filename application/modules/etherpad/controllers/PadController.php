@@ -12,7 +12,7 @@ class Etherpad_PadController extends Zend_Controller_Action
 
     public function init()
     {
-    	$this->_config			= $this->getFrontController()->getParam('bootstrap')->getOptions();
+    	$this->_config			= Zend_Registry::get('options');
     	$this->_session			= new Zend_Session_Namespace('etherpad');
         $this->_padForm 		= new Etherpad_Form_Pad();
         $this->_controlsForm 	= new Etherpad_Form_Controls();

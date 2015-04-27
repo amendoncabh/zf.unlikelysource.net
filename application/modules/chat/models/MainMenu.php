@@ -14,10 +14,6 @@ class Chat_Model_MainMenu
 														'class1'	=> 'item-202',
 //												 		'class2'	=> 'class_inside_a_tag',	
 												 		'uri'		=> '/chat/room/post'),
-												 array( 'label' 	=> 'View Code',
-														'class1'	=> 'item-209',
-//												 		'class2'	=> 'class_inside_a_tag',	
-												 		'uri'		=> '/code/view/chat/d/controllers/p/RoomController'),
 												));
 		return $menu;
 	}

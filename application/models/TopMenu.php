@@ -28,10 +28,8 @@ class Application_Model_TopMenu
 															'action' 		=> 'index',
 															'controller' 	=> 'index',
 															'module'		=> 'demos')),
-						new Zend_Navigation_Page_Mvc(array( 'label' 		=> 'Code',
-															'action' 		=> 'index',
-															'controller' 	=> 'view',
-															'module'		=> 'code')),
+						new Zend_Navigation_Page_Uri(array( 'label' 		=> 'Code',
+															'uri'			=> $options['url']['home'] . 'index/code')),
 						));
 		return $menu;
 	}

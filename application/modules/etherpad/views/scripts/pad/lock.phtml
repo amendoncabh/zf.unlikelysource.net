@@ -3,6 +3,6 @@
 	color: purple;
 }
 </style>
-<?php $url = 'http://' . $_SERVER['HTTP_HOST'] . '/etherpad/pad/index/pad/' . $this->padId; ?>
+<?php $url = 'http://' . $_SERVER['HTTP_HOST'] . '/pad/' . $this->padId; ?>
 Pad URL: <a href="<?php echo $url; ?>"><?php echo $url; ?></a>
 <?php echo $this->form; ?>

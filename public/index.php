@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', 1);
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -25,10 +26,8 @@ require_once 'Zend/Cache.php';
 
 // config cache params
 if (APPLICATION_ENV == 'production') {
-	$options['cache']['dir']  = APPLICATION_PATH  . '/../data/cache';
-	$options['cache']['life'] = 3600;
 	// check for config cache
-	$cache = Application_Model_Cache::getCache($options);
+	$cache = Application_Model_Cache::getCache();
 	$config = $cache->load('config');
 	if (!$config) {
 		$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
